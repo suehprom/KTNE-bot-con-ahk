@@ -19,7 +19,7 @@ TTS.ahk -> libreria de Text To Speech
 ejecutar final.ahk, presionar la letra "q" para que el bot comience a escuchar
 
 
-#comandos vocales:
+# comandos vocales:
 
 Despues de recibir un comando se va a escuchar un beep de 50 millisegundos de frecuencia 2000, que recibio el comando y que esta lista para recibir otro comando
 
