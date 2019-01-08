@@ -13,7 +13,7 @@ ejecutar final.ahk, presionar la letra "q" para que el bot comience a escuchar
 #comandos vocales:
 despues de recibir un comando se va a escuchar un beep de 50 millisegundos de frecuencia 2000, que recibio el comando y que esta lista para recibir otro comando
 
-#::chequear bomba::
+# ::chequear bomba::
 va a escuchar la definicion de la bomba
 -baterias [1-9]
 -digito [1-9]
@@ -23,6 +23,6 @@ va a escuchar la definicion de la bomba
 -fin
 ::::
 
-#::boton::
+# ::boton::
 primero va a pedir el color seguido del texto
 -.........
