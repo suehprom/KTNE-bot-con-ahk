@@ -22,11 +22,12 @@ vocal = "no"
 car = "no"
 frk = "no"
 paralelo = "no"
+strike = 0
 
-palabralista1 := ["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada"]
+palabralista1 := ["raqueta", "alfa", "lambda", "november", "araÃ±a", "hotel", "cespejada"]
 palabralista2 := ["euro", "raqueta", "cespejada", "quebec", "estrella", "hotel", "interrogacion"]
 palabralista3 := ["copyright", "whisky", "quebec", "kilo", "romeo", "lambda", "estrella"]
-palabralista4 := ["seis", "parrafo", "bravo", "araña", "kilo", "interrogacion", "sonrisa"]
+palabralista4 := ["seis", "parrafo", "bravo", "araÃ±a", "kilo", "interrogacion", "sonrisa"]
 palabralista5 := ["candelabro", "sonrisa", "bravo", "charlie", "parrafo", "tres", "estrella negra"]
 palabralista6 := ["seis", "euro", "puzzle", "ae", "candelabro", "enie", "omega"]
 palabra = 0
@@ -45,10 +46,15 @@ ExitApp
 r::
 Reload
 
-iniciar:
-loop{
 
-e.Recognize(["chequear bomba", "status", "chau", "cables", "boton", "simbolos"])
+iniciar:
+d.SetRate(-2)
+
+loop{
+d.SpeakWait("ready")
+gosub, bip
+
+e.Recognize(["chequear bomba", "status", "chau", "cables", "boton", "simbolos", "rojo", "azul", "verde", "amarillo", "quien", "la bomba exploto"])
 Texto := e.Prompt()
 ;TrayTip, reconocimiento, %Texto%
 ;sleep 1000
@@ -71,8 +77,41 @@ else if (Texto = "boton")
 else if (Texto = "simbolos")
 	;TrayTip, reconocimiento, simbolos
 	gosub, simbolos
+else if (Texto = "rojo")
+	{
+	color_simon = "simon rojo"
+	;msgbox, %color_simon%
+	;TrayTip, reconocimiento, simon rojo
+	gosub, simon
+	}
+else if (Texto = "azul")
+	{
+	color_simon = "simon azul"
+	;TrayTip, reconocimiento, simon azul
+	gosub, simon
+	}
+else if (Texto = "verde")
+	{
+	color_simon = "simon verde"
+	;TrayTip, reconocimiento, simon verde
+	gosub, simon
+	}
+else if (Texto = "amarillo")
+	{
+	color_simon = "simon amarillo"
+	;TrayTip, reconocimiento, simon amarillo
+	gosub, simon
+	}
+else if (Texto = "quien")
+	;TrayTip, reconocimiento, quien
+	gosub, quien
+else if (Texto = "la bomba exploto")
+	;TrayTip, reconocimiento, exploto
+	gosub, exploto
 }
 return
+
+
 
 chequear:
 d.SetRate(0)
@@ -564,18 +603,18 @@ palabra3 = ""
 palabra4 = ""
 
 
-e.Recognize(["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
+e.Recognize(["raqueta", "alfa", "lambda", "november", "araÃ±a", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
 letra1 := e.Prompt()
 TrayTip, reconocimiento, %letra1%
 SoundBeep, 2000, 50
 
-e.Recognize(["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
+e.Recognize(["raqueta", "alfa", "lambda", "november", "araÃ±a", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
 letra2 := e.Prompt()
 TrayTip, reconocimiento, %letra2%
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 
-e.Recognize(["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
+e.Recognize(["raqueta", "alfa", "lambda", "november", "araÃ±a", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
 letra3 := e.Prompt()
 TrayTip, reconocimiento, %letra3%
 SoundBeep, 2000, 50
@@ -583,7 +622,7 @@ SoundBeep, 2000, 50
 sleep 200
 SoundBeep, 2000, 50
 
-e.Recognize(["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
+e.Recognize(["raqueta", "alfa", "lambda", "november", "araÃ±a", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
 letra4 := e.Prompt()
 TrayTip, reconocimiento, %letra4%
 SoundBeep, 2000, 50
@@ -786,13 +825,13 @@ for i, elemento in palabralista6
 ;msgbox, fin lista %palabra%
 ;empiezo a buscar el orden
 if palabra = 1
-	palabrabuscar := ["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada"]
+	palabrabuscar := ["raqueta", "alfa", "lambda", "november", "araÃ±a", "hotel", "cespejada"]
 else if palabra = 2
 	palabrabuscar := ["euro", "raqueta", "cespejada", "quebec", "estrella", "hotel", "interrogacion"]
 else if palabra = 3
 	palabrabuscar := ["copyright", "whisky", "quebec", "kilo", "romeo", "lambda", "estrella"]
 else if palabra = 4
-	palabrabuscar := ["seis", "parrafo", "bravo", "araña", "kilo", "interrogacion", "sonrisa"]
+	palabrabuscar := ["seis", "parrafo", "bravo", "araÃ±a", "kilo", "interrogacion", "sonrisa"]
 else if palabra = 5
 	palabrabuscar := ["candelabro", "sonrisa", "bravo", "charlie", "parrafo", "tres", "estrella negra"]
 else if palabra = 6
@@ -824,11 +863,1123 @@ return
 
 
 
+simon:
+decir_simon = ""
+;rojo azul verde amarillo
+;red blue green yellow
+;chequeo vocal
+if vocal = "yes"
+{
+    ;si tiene vocal
+    if strike = 0
+    {
+        ;sin strike si vocal
+        if color_simon = "simon rojo"
+        {
+            decir_simon = "blue"
+        }
+        else if color_simon = "simon azul"
+        {
+            decir_simon = "red"
+        }
+        else if color_simon = "simon verde"
+        {
+            decir_simon = "yellow"
+        }
+        else if color_simon = "simon amarillo"
+        {
+            decir_simon = "green"
+        }
+    }
+    else if strike = 1
+    {
+        ;1 strike si vocal
+        if color_simon = "simon rojo"
+        {
+            decir_simon = "yellow"
+        }
+        else if color_simon = "simon azul"
+        {
+            decir_simon = "green"
+        }
+        else if color_simon = "simon verde"
+        {
+            decir_simon = "blue"
+        }
+        else if color_simon = "simon amarillo"
+        {
+            decir_simon = "red"
+        }
+    }
+    else
+    {
+        ;mas de un strike si vocal
+        if color_simon = "simon rojo"
+        {
+            decir_simon = "green"
+        }
+        else if color_simon = "simon azul"
+        {
+            decir_simon = "red"
+        }
+        else if color_simon = "simon verde"
+        {
+            decir_simon = "yellow"
+        }
+        else if color_simon = "simon amarillo"
+        {
+            decir_simon = "blue"
+        }
+    }
+}
+else
+{
+    ;no tiene vocal
+    if strike = 0
+    {
+        ;sin strike no vocal
+        if color_simon = "simon rojo"
+        {
+            decir_simon = "blue"
+        }
+        else if color_simon = "simon azul"
+        {
+            decir_simon = "yellow"
+        }
+        else if color_simon = "simon verde"
+        {
+            decir_simon = "green"
+        }
+        else if color_simon = "simon amarillo"
+        {
+            decir_simon = "red"
+        }
+    }
+    else if strike = 1
+    {
+        ;1 strike no vocal
+        if color_simon = "simon rojo"
+        {
+            decir_simon = "red"
+        }
+        else if color_simon = "simon azul"
+        {
+            decir_simon = "blue"
+        }
+        else if color_simon = "simon verde"
+        {
+            decir_simon = "yellow"
+        }
+        else if color_simon = "simon amarillo"
+        {
+            decir_simon = "green"
+        }
+    }
+    else
+    {
+        ;mas de un strike no vocal
+        if color_simon = "simon rojo"
+        {
+            decir_simon = "yellow"
+        }
+        else if color_simon = "simon azul"
+        {
+            decir_simon = "green"
+        }
+        else if color_simon = "simon verde"
+        {
+            decir_simon = "blue"
+        }
+        else if color_simon = "simon amarillo"
+        {
+            decir_simon = "red"
+        }
+    }
+}
+;msgbox, %color_simon% - %decir_simon%
 
+d.SetRate(-4)
+d.Speak(decir_simon)
+d.SetRate(-2)
+
+return
+
+quien:
+posicion_quien = 0
+buscar_quien = 
+lista_quien := [""]
+decir_quien = ""
+quien_encontrada = ""
+display_quien = ""
+
+d.SetRate(-2)
+d.SetPitch(0)
+d.SpeakWait("who's on first")
+gosub, bip
+
+;saco el indice
+e.Recognize(["ies", "first", "displey", "ocai", "seis", "nazin", "nada", "blanc", "no", "led", "lid", "rid", "red", "romeoeco", "limaeco", "joldon", "yanki", "yankialfa", "yankiromeo", "yankiapostrofe", "iuniformromeo", "tango eco", "tangoapostrofe", "tangoromeo", "tangoalfa", "si", "charlie", "charlieco", "don", "jol", "leftango", "laik", "midel", "next", "pres", "redi", "rait", "shur", "iuniform", "iuniform hotel", "iuniform uniform", "iuniform hotel hotel", "weit", "whisky tango", "whisky tango interrogacion", "salir"])
+Texto := e.Prompt()
+
+if (Texto = "ies")
+	Texto = YES
+else if (Texto = "first")
+	Texto = FIRST
+else if (Texto = "displey")
+	Texto = DISPLAY
+else if (Texto = "ocai")
+	Texto = OKAY
+else if (Texto = "seis")
+	Texto = SAYS
+else if (Texto = "nazin")
+	Texto = NOTHING
+else if (Texto = "nada")
+	Texto = NADA
+else if (Texto = "blanc")
+	Texto = BLANK
+else if (Texto = "no")
+	Texto = NO
+else if (Texto = "led")
+	Texto = LED
+else if (Texto = "lid")
+	Texto = LEAD
+else if (Texto = "rid")
+	Texto = READ
+else if (Texto = "red")
+	Texto = RED
+else if (Texto = "romeoeco")
+	Texto = REED
+else if (Texto = "limaeco")
+	Texto = LEED
+else if (Texto = "joldon")
+	Texto = HOLD ON
+else if (Texto = "yanki")
+	Texto = YOU
+else if (Texto = "yankialfa")
+	Texto = YOU ARE
+else if (Texto = "yankiromeo")
+	Texto = YOUR
+else if (Texto = "yankiapostrofe")
+	Texto = YOU'RE
+else if (Texto = "iuniformromeo")
+	Texto = UR
+else if (Texto = "tango eco")
+	Texto = THERE
+else if (Texto = "tangoapostrofe")
+	Texto = THEY'RE
+else if (Texto = "tangoromeo")
+	Texto = THEIR
+else if (Texto = "tangoalfa")
+	Texto = THEY ARE
+else if (Texto = "si")
+	Texto = SEE
+else if (Texto = "charlie")
+	Texto = C
+else if (Texto = "charlieco")
+	Texto = CEE
+else if (Texto = "don")
+	Texto = DONE
+else if (Texto = "jol")
+	Texto = HOLD
+else if (Texto = "leftango")
+	Texto = LEFT
+else if (Texto = "laik")
+	Texto = LIKE
+else if (Texto = "midel")
+	Texto = MIDDLE
+else if (Texto = "next")
+	Texto = NEXT
+else if (Texto = "pres")
+	Texto = PRESS
+else if (Texto = "redi")
+	Texto = READY
+else if (Texto = "rait")
+	Texto = RIGHT
+else if (Texto = "shur")
+	Texto = SURE
+else if (Texto = "iuniform")
+	Texto = U
+else if (Texto = "iuniform hotel")
+	Texto = UH HUH
+else if (Texto = "iuniform uniform")
+	Texto = UH UH
+else if (Texto = "iuniform hotel hotel")
+	Texto = UHHH
+else if (Texto = "weit")
+	Texto = WAIT
+else if (Texto = "whisky tango")
+	Texto = WHAT
+else if (Texto = "whisky tango interrogacion")
+	Texto = WHAT?
+else if (Texto = "salir")
+	return
+
+
+
+display_quien := Texto
+
+;chequeo que posicion buscar
+
+if (Texto = "UR")
+	posicion_quien = 1
+else if (Texto = "FIRST" or Texto = "OKAY" or Texto = "C")
+	posicion_quien = 2
+else if (Texto = "YES" or Texto = "NOTHING" or Texto = "LED" or Texto = "THEY ARE")
+	posicion_quien = 3
+else if (Texto = "BLANK" or Texto = "READ" or Texto = "RED" or Texto = "YOU" or Texto = "YOUR" or Texto = "YOU'RE" or Texto = "THEIR")
+	posicion_quien = 4
+else if (Texto = "NADA" or Texto = "REED" or Texto = "LEED" or Texto = "THEY'RE")
+	posicion_quien = 5
+else if (Texto = "DISPLAY" or Texto = "SAYS" or Texto = "NO" or Texto = "LEAD" or Texto = "HOLD ON" or Texto = "YOU ARE" or Texto = "THERE" or Texto = "SEE" or Texto = "CEE")
+	posicion_quien = 6
+SoundBeep, 1000, 50
+
+;-------------------pregunto por primera
+e.Recognize(["ies", "first", "displey", "ocai", "seis", "nazin", "nada", "blanc", "no", "led", "lid", "rid", "red", "romeoeco", "limaeco", "joldon", "yanki", "yankialfa", "yankiromeo", "yankiapostrofe", "iuniformromeo", "tango eco", "tangoapostrofe", "tangoromeo", "tangoalfa", "si", "charlie", "charlieco", "don", "jol", "leftango", "laik", "midel", "next", "pres", "redi", "rait", "shur", "iuniform", "iuniform hotel", "iuniform uniform", "iuniform hotel hotel", "weit", "whisky tango", "whisky tango interrogacion"])
+Texto := e.Prompt()
+
+if (Texto = "ies")
+	Texto = YES
+else if (Texto = "first")
+	Texto = FIRST
+else if (Texto = "displey")
+	Texto = DISPLAY
+else if (Texto = "ocai")
+	Texto = OKAY
+else if (Texto = "seis")
+	Texto = SAYS
+else if (Texto = "nazin")
+	Texto = NOTHING
+else if (Texto = "nada")
+	Texto = NADA
+else if (Texto = "blanc")
+	Texto = BLANK
+else if (Texto = "no")
+	Texto = NO
+else if (Texto = "led")
+	Texto = LED
+else if (Texto = "lid")
+	Texto = LEAD
+else if (Texto = "rid")
+	Texto = READ
+else if (Texto = "red")
+	Texto = RED
+else if (Texto = "romeoeco")
+	Texto = REED
+else if (Texto = "limaeco")
+	Texto = LEED
+else if (Texto = "joldon")
+	Texto = HOLD ON
+else if (Texto = "yanki")
+	Texto = YOU
+else if (Texto = "yankialfa")
+	Texto = YOU ARE
+else if (Texto = "yankiromeo")
+	Texto = YOUR
+else if (Texto = "yankiapostrofe")
+	Texto = YOU'RE
+else if (Texto = "iuniformromeo")
+	Texto = UR
+else if (Texto = "tango eco")
+	Texto = THERE
+else if (Texto = "tangoapostrofe")
+	Texto = THEY'RE
+else if (Texto = "tangoromeo")
+	Texto = THEIR
+else if (Texto = "tangoalfa")
+	Texto = THEY ARE
+else if (Texto = "si")
+	Texto = SEE
+else if (Texto = "charlie")
+	Texto = C
+else if (Texto = "charlieco")
+	Texto = CEE
+else if (Texto = "don")
+	Texto = DONE
+else if (Texto = "jol")
+	Texto = HOLD
+else if (Texto = "leftango")
+	Texto = LEFT
+else if (Texto = "laik")
+	Texto = LIKE
+else if (Texto = "midel")
+	Texto = MIDDLE
+else if (Texto = "next")
+	Texto = NEXT
+else if (Texto = "pres")
+	Texto = PRESS
+else if (Texto = "redi")
+	Texto = READY
+else if (Texto = "rait")
+	Texto = RIGHT
+else if (Texto = "shur")
+	Texto = SURE
+else if (Texto = "iuniform")
+	Texto = U
+else if (Texto = "iuniform hotel")
+	Texto = UH HUH
+else if (Texto = "iuniform uniform")
+	Texto = UH UH
+else if (Texto = "iuniform hotel hotel")
+	Texto = UHHH
+else if (Texto = "weit")
+	Texto = WAIT
+else if (Texto = "whisky tango")
+	Texto = WHAT
+else if (Texto = "whisky tango interrogacion")
+	Texto = WHAT?
+
+quien_1 = %Texto%
+SoundBeep, 2000, 50
+
+
+;-------------------pregunto por segunda
+e.Recognize(["ies", "first", "displey", "ocai", "seis", "nazin", "nada", "blanc", "no", "led", "lid", "rid", "red", "romeoeco", "limaeco", "joldon", "yanki", "yankialfa", "yankiromeo", "yankiapostrofe", "iuniformromeo", "tango eco", "tangoapostrofe", "tangoromeo", "tangoalfa", "si", "charlie", "charlieco", "don", "jol", "leftango", "laik", "midel", "next", "pres", "redi", "rait", "shur", "iuniform", "iuniform hotel", "iuniform uniform", "iuniform hotel hotel", "weit", "whisky tango", "whisky tango interrogacion"])
+Texto := e.Prompt()
+
+if (Texto = "ies")
+	Texto = YES
+else if (Texto = "first")
+	Texto = FIRST
+else if (Texto = "displey")
+	Texto = DISPLAY
+else if (Texto = "ocai")
+	Texto = OKAY
+else if (Texto = "seis")
+	Texto = SAYS
+else if (Texto = "nazin")
+	Texto = NOTHING
+else if (Texto = "nada")
+	Texto = NADA
+else if (Texto = "blanc")
+	Texto = BLANK
+else if (Texto = "no")
+	Texto = NO
+else if (Texto = "led")
+	Texto = LED
+else if (Texto = "lid")
+	Texto = LEAD
+else if (Texto = "rid")
+	Texto = READ
+else if (Texto = "red")
+	Texto = RED
+else if (Texto = "romeoeco")
+	Texto = REED
+else if (Texto = "limaeco")
+	Texto = LEED
+else if (Texto = "joldon")
+	Texto = HOLD ON
+else if (Texto = "yanki")
+	Texto = YOU
+else if (Texto = "yankialfa")
+	Texto = YOU ARE
+else if (Texto = "yankiromeo")
+	Texto = YOUR
+else if (Texto = "yankiapostrofe")
+	Texto = YOU'RE
+else if (Texto = "iuniformromeo")
+	Texto = UR
+else if (Texto = "tango eco")
+	Texto = THERE
+else if (Texto = "tangoapostrofe")
+	Texto = THEY'RE
+else if (Texto = "tangoromeo")
+	Texto = THEIR
+else if (Texto = "tangoalfa")
+	Texto = THEY ARE
+else if (Texto = "si")
+	Texto = SEE
+else if (Texto = "charlie")
+	Texto = C
+else if (Texto = "charlieco")
+	Texto = CEE
+else if (Texto = "don")
+	Texto = DONE
+else if (Texto = "jol")
+	Texto = HOLD
+else if (Texto = "leftango")
+	Texto = LEFT
+else if (Texto = "laik")
+	Texto = LIKE
+else if (Texto = "midel")
+	Texto = MIDDLE
+else if (Texto = "next")
+	Texto = NEXT
+else if (Texto = "pres")
+	Texto = PRESS
+else if (Texto = "redi")
+	Texto = READY
+else if (Texto = "rait")
+	Texto = RIGHT
+else if (Texto = "shur")
+	Texto = SURE
+else if (Texto = "iuniform")
+	Texto = U
+else if (Texto = "iuniform hotel")
+	Texto = UH HUH
+else if (Texto = "iuniform uniform")
+	Texto = UH UH
+else if (Texto = "iuniform hotel hotel")
+	Texto = UHHH
+else if (Texto = "weit")
+	Texto = WAIT
+else if (Texto = "whisky tango")
+	Texto = WHAT
+else if (Texto = "whisky tango interrogacion")
+	Texto = WHAT?
+
+quien_2 = %Texto%
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+
+
+;-------------------pregunto por tercera
+e.Recognize(["ies", "first", "displey", "ocai", "seis", "nazin", "nada", "blanc", "no", "led", "lid", "rid", "red", "romeoeco", "limaeco", "joldon", "yanki", "yankialfa", "yankiromeo", "yankiapostrofe", "iuniformromeo", "tango eco", "tangoapostrofe", "tangoromeo", "tangoalfa", "si", "charlie", "charlieco", "don", "jol", "leftango", "laik", "midel", "next", "pres", "redi", "rait", "shur", "iuniform", "iuniform hotel", "iuniform uniform", "iuniform hotel hotel", "weit", "whisky tango", "whisky tango interrogacion"])
+Texto := e.Prompt()
+
+if (Texto = "ies")
+	Texto = YES
+else if (Texto = "first")
+	Texto = FIRST
+else if (Texto = "displey")
+	Texto = DISPLAY
+else if (Texto = "ocai")
+	Texto = OKAY
+else if (Texto = "seis")
+	Texto = SAYS
+else if (Texto = "nazin")
+	Texto = NOTHING
+else if (Texto = "nada")
+	Texto = NADA
+else if (Texto = "blanc")
+	Texto = BLANK
+else if (Texto = "no")
+	Texto = NO
+else if (Texto = "led")
+	Texto = LED
+else if (Texto = "lid")
+	Texto = LEAD
+else if (Texto = "rid")
+	Texto = READ
+else if (Texto = "red")
+	Texto = RED
+else if (Texto = "romeoeco")
+	Texto = REED
+else if (Texto = "limaeco")
+	Texto = LEED
+else if (Texto = "joldon")
+	Texto = HOLD ON
+else if (Texto = "yanki")
+	Texto = YOU
+else if (Texto = "yankialfa")
+	Texto = YOU ARE
+else if (Texto = "yankiromeo")
+	Texto = YOUR
+else if (Texto = "yankiapostrofe")
+	Texto = YOU'RE
+else if (Texto = "iuniformromeo")
+	Texto = UR
+else if (Texto = "tango eco")
+	Texto = THERE
+else if (Texto = "tangoapostrofe")
+	Texto = THEY'RE
+else if (Texto = "tangoromeo")
+	Texto = THEIR
+else if (Texto = "tangoalfa")
+	Texto = THEY ARE
+else if (Texto = "si")
+	Texto = SEE
+else if (Texto = "charlie")
+	Texto = C
+else if (Texto = "charlieco")
+	Texto = CEE
+else if (Texto = "don")
+	Texto = DONE
+else if (Texto = "jol")
+	Texto = HOLD
+else if (Texto = "leftango")
+	Texto = LEFT
+else if (Texto = "laik")
+	Texto = LIKE
+else if (Texto = "midel")
+	Texto = MIDDLE
+else if (Texto = "next")
+	Texto = NEXT
+else if (Texto = "pres")
+	Texto = PRESS
+else if (Texto = "redi")
+	Texto = READY
+else if (Texto = "rait")
+	Texto = RIGHT
+else if (Texto = "shur")
+	Texto = SURE
+else if (Texto = "iuniform")
+	Texto = U
+else if (Texto = "iuniform hotel")
+	Texto = UH HUH
+else if (Texto = "iuniform uniform")
+	Texto = UH UH
+else if (Texto = "iuniform hotel hotel")
+	Texto = UHHH
+else if (Texto = "weit")
+	Texto = WAIT
+else if (Texto = "whisky tango")
+	Texto = WHAT
+else if (Texto = "whisky tango interrogacion")
+	Texto = WHAT?
+
+quien_3 = %Texto%
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+sleep 100
+SoundBeep, 2000, 50
+
+
+;-------------------pregunto por cuarta
+e.Recognize(["ies", "first", "displey", "ocai", "seis", "nazin", "nada", "blanc", "no", "led", "lid", "rid", "red", "romeoeco", "limaeco", "joldon", "yanki", "yankialfa", "yankiromeo", "yankiapostrofe", "iuniformromeo", "tango eco", "tangoapostrofe", "tangoromeo", "tangoalfa", "si", "charlie", "charlieco", "don", "jol", "leftango", "laik", "midel", "next", "pres", "redi", "rait", "shur", "iuniform", "iuniform hotel", "iuniform uniform", "iuniform hotel hotel", "weit", "whisky tango", "whisky tango interrogacion"])
+Texto := e.Prompt()
+
+if (Texto = "ies")
+	Texto = YES
+else if (Texto = "first")
+	Texto = FIRST
+else if (Texto = "displey")
+	Texto = DISPLAY
+else if (Texto = "ocai")
+	Texto = OKAY
+else if (Texto = "seis")
+	Texto = SAYS
+else if (Texto = "nazin")
+	Texto = NOTHING
+else if (Texto = "nada")
+	Texto = NADA
+else if (Texto = "blanc")
+	Texto = BLANK
+else if (Texto = "no")
+	Texto = NO
+else if (Texto = "led")
+	Texto = LED
+else if (Texto = "lid")
+	Texto = LEAD
+else if (Texto = "rid")
+	Texto = READ
+else if (Texto = "red")
+	Texto = RED
+else if (Texto = "romeoeco")
+	Texto = REED
+else if (Texto = "limaeco")
+	Texto = LEED
+else if (Texto = "joldon")
+	Texto = HOLD ON
+else if (Texto = "yanki")
+	Texto = YOU
+else if (Texto = "yankialfa")
+	Texto = YOU ARE
+else if (Texto = "yankiromeo")
+	Texto = YOUR
+else if (Texto = "yankiapostrofe")
+	Texto = YOU'RE
+else if (Texto = "iuniformromeo")
+	Texto = UR
+else if (Texto = "tango eco")
+	Texto = THERE
+else if (Texto = "tangoapostrofe")
+	Texto = THEY'RE
+else if (Texto = "tangoromeo")
+	Texto = THEIR
+else if (Texto = "tangoalfa")
+	Texto = THEY ARE
+else if (Texto = "si")
+	Texto = SEE
+else if (Texto = "charlie")
+	Texto = C
+else if (Texto = "charlieco")
+	Texto = CEE
+else if (Texto = "don")
+	Texto = DONE
+else if (Texto = "jol")
+	Texto = HOLD
+else if (Texto = "leftango")
+	Texto = LEFT
+else if (Texto = "laik")
+	Texto = LIKE
+else if (Texto = "midel")
+	Texto = MIDDLE
+else if (Texto = "next")
+	Texto = NEXT
+else if (Texto = "pres")
+	Texto = PRESS
+else if (Texto = "redi")
+	Texto = READY
+else if (Texto = "rait")
+	Texto = RIGHT
+else if (Texto = "shur")
+	Texto = SURE
+else if (Texto = "iuniform")
+	Texto = U
+else if (Texto = "iuniform hotel")
+	Texto = UH HUH
+else if (Texto = "iuniform uniform")
+	Texto = UH UH
+else if (Texto = "iuniform hotel hotel")
+	Texto = UHHH
+else if (Texto = "weit")
+	Texto = WAIT
+else if (Texto = "whisky tango")
+	Texto = WHAT
+else if (Texto = "whisky tango interrogacion")
+	Texto = WHAT?
+
+quien_4 = %Texto%
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+sleep 100
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+
+
+;-------------------pregunto por quinta
+e.Recognize(["ies", "first", "displey", "ocai", "seis", "nazin", "nada", "blanc", "no", "led", "lid", "rid", "red", "romeoeco", "limaeco", "joldon", "yanki", "yankialfa", "yankiromeo", "yankiapostrofe", "iuniformromeo", "tango eco", "tangoapostrofe", "tangoromeo", "tangoalfa", "si", "charlie", "charlieco", "don", "jol", "leftango", "laik", "midel", "next", "pres", "redi", "rait", "shur", "iuniform", "iuniform hotel", "iuniform uniform", "iuniform hotel hotel", "weit", "whisky tango", "whisky tango interrogacion"])
+Texto := e.Prompt()
+
+if (Texto = "ies")
+	Texto = YES
+else if (Texto = "first")
+	Texto = FIRST
+else if (Texto = "displey")
+	Texto = DISPLAY
+else if (Texto = "ocai")
+	Texto = OKAY
+else if (Texto = "seis")
+	Texto = SAYS
+else if (Texto = "nazin")
+	Texto = NOTHING
+else if (Texto = "nada")
+	Texto = NADA
+else if (Texto = "blanc")
+	Texto = BLANK
+else if (Texto = "no")
+	Texto = NO
+else if (Texto = "led")
+	Texto = LED
+else if (Texto = "lid")
+	Texto = LEAD
+else if (Texto = "rid")
+	Texto = READ
+else if (Texto = "red")
+	Texto = RED
+else if (Texto = "romeoeco")
+	Texto = REED
+else if (Texto = "limaeco")
+	Texto = LEED
+else if (Texto = "joldon")
+	Texto = HOLD ON
+else if (Texto = "yanki")
+	Texto = YOU
+else if (Texto = "yankialfa")
+	Texto = YOU ARE
+else if (Texto = "yankiromeo")
+	Texto = YOUR
+else if (Texto = "yankiapostrofe")
+	Texto = YOU'RE
+else if (Texto = "iuniformromeo")
+	Texto = UR
+else if (Texto = "tango eco")
+	Texto = THERE
+else if (Texto = "tangoapostrofe")
+	Texto = THEY'RE
+else if (Texto = "tangoromeo")
+	Texto = THEIR
+else if (Texto = "tangoalfa")
+	Texto = THEY ARE
+else if (Texto = "si")
+	Texto = SEE
+else if (Texto = "charlie")
+	Texto = C
+else if (Texto = "charlieco")
+	Texto = CEE
+else if (Texto = "don")
+	Texto = DONE
+else if (Texto = "jol")
+	Texto = HOLD
+else if (Texto = "leftango")
+	Texto = LEFT
+else if (Texto = "laik")
+	Texto = LIKE
+else if (Texto = "midel")
+	Texto = MIDDLE
+else if (Texto = "next")
+	Texto = NEXT
+else if (Texto = "pres")
+	Texto = PRESS
+else if (Texto = "redi")
+	Texto = READY
+else if (Texto = "rait")
+	Texto = RIGHT
+else if (Texto = "shur")
+	Texto = SURE
+else if (Texto = "iuniform")
+	Texto = U
+else if (Texto = "iuniform hotel")
+	Texto = UH HUH
+else if (Texto = "iuniform uniform")
+	Texto = UH UH
+else if (Texto = "iuniform hotel hotel")
+	Texto = UHHH
+else if (Texto = "weit")
+	Texto = WAIT
+else if (Texto = "whisky tango")
+	Texto = WHAT
+else if (Texto = "whisky tango interrogacion")
+	Texto = WHAT?
+
+quien_5 = %Texto%
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+sleep 100
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+sleep 100
+SoundBeep, 2000, 50
+
+
+;-------------------pregunto por sexta
+e.Recognize(["ies", "first", "displey", "ocai", "seis", "nazin", "nada", "blanc", "no", "led", "lid", "rid", "red", "romeoeco", "limaeco", "joldon", "yanki", "yankialfa", "yankiromeo", "yankiapostrofe", "iuniformromeo", "tango eco", "tangoapostrofe", "tangoromeo", "tangoalfa", "si", "charlie", "charlieco", "don", "jol", "leftango", "laik", "midel", "next", "pres", "redi", "rait", "shur", "iuniform", "iuniform hotel", "iuniform uniform", "iuniform hotel hotel", "weit", "whisky tango", "whisky tango interrogacion"])
+Texto := e.Prompt()
+
+if (Texto = "ies")
+	Texto = YES
+else if (Texto = "first")
+	Texto = FIRST
+else if (Texto = "displey")
+	Texto = DISPLAY
+else if (Texto = "ocai")
+	Texto = OKAY
+else if (Texto = "seis")
+	Texto = SAYS
+else if (Texto = "nazin")
+	Texto = NOTHING
+else if (Texto = "nada")
+	Texto = NADA
+else if (Texto = "blanc")
+	Texto = BLANK
+else if (Texto = "no")
+	Texto = NO
+else if (Texto = "led")
+	Texto = LED
+else if (Texto = "lid")
+	Texto = LEAD
+else if (Texto = "rid")
+	Texto = READ
+else if (Texto = "red")
+	Texto = RED
+else if (Texto = "romeoeco")
+	Texto = REED
+else if (Texto = "limaeco")
+	Texto = LEED
+else if (Texto = "joldon")
+	Texto = HOLD ON
+else if (Texto = "yanki")
+	Texto = YOU
+else if (Texto = "yankialfa")
+	Texto = YOU ARE
+else if (Texto = "yankiromeo")
+	Texto = YOUR
+else if (Texto = "yankiapostrofe")
+	Texto = YOU'RE
+else if (Texto = "iuniformromeo")
+	Texto = UR
+else if (Texto = "tango eco")
+	Texto = THERE
+else if (Texto = "tangoapostrofe")
+	Texto = THEY'RE
+else if (Texto = "tangoromeo")
+	Texto = THEIR
+else if (Texto = "tangoalfa")
+	Texto = THEY ARE
+else if (Texto = "si")
+	Texto = SEE
+else if (Texto = "charlie")
+	Texto = C
+else if (Texto = "charlieco")
+	Texto = CEE
+else if (Texto = "don")
+	Texto = DONE
+else if (Texto = "jol")
+	Texto = HOLD
+else if (Texto = "leftango")
+	Texto = LEFT
+else if (Texto = "laik")
+	Texto = LIKE
+else if (Texto = "midel")
+	Texto = MIDDLE
+else if (Texto = "next")
+	Texto = NEXT
+else if (Texto = "pres")
+	Texto = PRESS
+else if (Texto = "redi")
+	Texto = READY
+else if (Texto = "rait")
+	Texto = RIGHT
+else if (Texto = "shur")
+	Texto = SURE
+else if (Texto = "iuniform")
+	Texto = U
+else if (Texto = "iuniform hotel")
+	Texto = UH HUH
+else if (Texto = "iuniform uniform")
+	Texto = UH UH
+else if (Texto = "iuniform hotel hotel")
+	Texto = UHHH
+else if (Texto = "weit")
+	Texto = WAIT
+else if (Texto = "whisky tango")
+	Texto = WHAT
+else if (Texto = "whisky tango interrogacion")
+	Texto = WHAT?
+
+quien_6 = %Texto%
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+sleep 100
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+sleep 100
+SoundBeep, 2000, 50
+SoundBeep, 2000, 50
+
+;igualo posicion de palabra con valor de la palabra
+if posicion_quien = 1 
+	buscar_quien = %quien_1%
+else if posicion_quien = 2
+	buscar_quien = %quien_2%
+else if posicion_quien = 3
+	buscar_quien = %quien_3%
+else if posicion_quien = 4
+	buscar_quien = %quien_4%
+else if posicion_quien = 5
+	buscar_quien = %quien_5%
+else if posicion_quien = 6
+	buscar_quien = %quien_6%
+
+;definicion de variables tipo lista segun la palabra dada
+
+if (buscar_quien = "READY")
+	lista_quien := ["YES", "OKAY", "WHAT", "MIDDLE", "LEFT", "PRESS", "RIGHT", "BLANK", "READY", "NO", "FIRST", "UHHH", "NOTHING", "WAIT"]
+else if (buscar_quien = "FIRST")
+	lista_quien := ["LEFT", "OKAY", "YES", "MIDDLE", "NO", "RIGHT", "NOTHING", "UHHH", "WAIT", "READY", "BLANK", "WHAT", "PRESS", "FIRST"]
+else if (buscar_quien = "NO")
+	lista_quien := ["BLANK", "UHHH", "WAIT", "FIRST", "WHAT", "READY", "RIGHT", "YES", "NOTHING", "LEFT", "PRESS", "OKAY", "NO", "MIDDLE"]
+else if (buscar_quien = "BLANK")
+	lista_quien := ["WAIT", "RIGHT", "OKAY", "MIDDLE", "BLANK", "PRESS", "READY", "NOTHING", "NO", "WHAT", "LEFT", "UHHH", "YES", "FIRST"]
+else if (buscar_quien = "NOTHING")
+	lista_quien := ["UHHH", "RIGHT", "OKAY", "MIDDLE", "YES", "BLANK", "NO", "PRESS", "LEFT", "WHAT", "WAIT", "FIRST", "NOTHING", "READY"]
+else if (buscar_quien = "YES")
+	lista_quien := ["OKAY", "RIGHT", "UHHH", "MIDDLE", "FIRST", "WHAT", "PRESS", "READY", "NOTHING", "YES", "LEFT", "BLANK", "NO", "WAIT"]
+else if (buscar_quien = "WHAT")
+	lista_quien := ["UHHH", "WHAT", "LEFT", "NOTHING", "READY", "BLANK", "MIDDLE", "NO", "OKAY", "FIRST", "WAIT", "YES", "PRESS", "RIGHT"]
+else if (buscar_quien = "UHHH")
+	lista_quien := ["READY", "NOTHING", "LEFT", "WHAT", "OKAY", "YES", "RIGHT", "NO", "PRESS", "BLANK", "UHHH", "MIDDLE", "WAIT", "FIRST"]
+else if (buscar_quien = "LEFT")
+	lista_quien := ["RIGHT", "LEFT", "FIRST", "NO", "MIDDLE", "YES", "BLANK", "WHAT", "UHHH", "WAIT", "PRESS", "READY", "OKAY", "NOTHING"]
+else if (buscar_quien = "RIGHT")
+	lista_quien := ["YES", "NOTHING", "READY", "PRESS", "NO", "WAIT", "WHAT", "RIGHT", "MIDDLE", "LEFT", "UHHH", "BLANK", "OKAY", "FIRST"]
+else if (buscar_quien = "MIDDLE")
+	lista_quien := ["BLANK", "READY", "OKAY", "WHAT", "NOTHING", "PRESS", "NO", "WAIT", "LEFT", "MIDDLE", "RIGHT", "FIRST", "UHHH", "YES"]
+else if (buscar_quien = "OKAY")
+	lista_quien := ["MIDDLE", "NO", "FIRST", "YES", "UHHH", "NOTHING", "WAIT", "OKAY", "LEFT", "READY", "BLANK", "PRESS", "WHAT", "RIGHT"]
+else if (buscar_quien = "WAIT")
+	lista_quien := ["UHHH", "NO", "BLANK", "OKAY", "YES", "LEFT", "FIRST", "PRESS", "WHAT", "WAIT", "NOTHING", "READY", "RIGHT", "MIDDLE"]
+else if (buscar_quien = "PRESS")
+	lista_quien := ["RIGHT", "MIDDLE", "YES", "READY", "PRESS", "OKAY", "NOTHING", "UHHH", "BLANK", "LEFT", "FIRST", "WHAT", "NO", "WAIT"]
+else if (buscar_quien = "YOU")
+	lista_quien := ["SURE", "YOU ARE", "YOUR", "YOU'RE", "NEXT", "UH HUH", "UR", "HOLD", "WHAT?", "YOU", "UH UH", "LIKE", "DONE", "U"]
+else if (buscar_quien = "YOU ARE")
+	lista_quien := ["YOUR", "NEXT", "LIKE", "UH HUH", "WHAT?", "DONE", "UH UH", "HOLD", "YOU", "U", "YOU'RE", "SURE", "UR", "YOU ARE"]
+else if (buscar_quien = "YOUR")
+	lista_quien := ["UH UH", "YOU ARE", "UH HUH", "YOUR", "NEXT", "UR", "SURE", "U", "YOU'RE", "YOU", "WHAT?", "HOLD", "LIKE", "DONE"]
+else if (buscar_quien = "YOU'RE")
+	lista_quien := ["YOU", "YOU'RE", "UR", "NEXT", "UH UH", "YOU ARE", "U", "YOUR", "WHAT?", "UH HUH", "SURE", "DONE", "LIKE", "HOLD"]
+else if (buscar_quien = "UR")
+	lista_quien := ["DONE", "U", "UR", "UH HUH", "WHAT?", "SURE", "YOUR", "HOLD", "YOU'RE", "LIKE", "NEXT", "UH UH", "YOU ARE", "YOU"]
+else if (buscar_quien = "U")
+	lista_quien := ["UH HUH", "SURE", "NEXT", "WHAT?", "YOU'RE", "UR", "UH UH", "DONE", "U", "YOU", "LIKE", "HOLD", "YOU ARE", "YOUR"]
+else if (buscar_quien = "UH HUH")
+	lista_quien := ["UH HUH", "YOUR", "YOU ARE", "YOU", "DONE", "HOLD", "UH UH", "NEXT", "SURE", "LIKE", "YOU'RE", "UR", "U", "WHAT?"]
+else if (buscar_quien = "UH UH")
+	lista_quien := ["UR", "U", "YOU ARE", "YOU'RE", "NEXT", "UH UH", "DONE", "YOU", "UH HUH", "LIKE", "YOUR", "SURE", "HOLD", "WHAT?"]
+else if (buscar_quien = "WHAT?")
+	lista_quien := ["YOU", "HOLD", "YOU'RE", "YOUR", "U", "DONE", "UH UH", "LIKE", "YOU ARE", "UH HUH", "UR", "NEXT", "WHAT?", "SURE"]
+else if (buscar_quien = "DONE")
+	lista_quien := ["SURE", "UH HUH", "NEXT", "WHAT?", "YOUR", "UR", "YOU'RE", "HOLD", "LIKE", "YOU", "U", "YOU ARE", "UH UH", "DONE"]
+else if (buscar_quien = "NEXT")
+	lista_quien := ["WHAT?", "UH HUH", "UH UH", "YOUR", "HOLD", "SURE", "NEXT", "LIKE", "DONE", "YOU ARE", "UR", "YOU'RE", "U", "YOU"]
+else if (buscar_quien = "HOLD")
+	lista_quien := ["YOU ARE", "U", "DONE", "UH UH", "YOU", "UR", "SURE", "WHAT?", "YOU'RE", "NEXT", "HOLD", "UH HUH", "YOUR", "LIKE"]
+else if (buscar_quien = "SURE")
+	lista_quien := ["YOU ARE", "DONE", "LIKE", "YOU'RE", "YOU", "HOLD", "UH HUH", "UR", "SURE", "U", "WHAT?", "NEXT", "YOUR", "UH UH"]
+else if (buscar_quien = "LIKE")
+	lista_quien := ["YOU'RE", "NEXT", "U", "UR", "HOLD", "DONE", "UH UH", "WHAT?", "UH HUH", "YOU", "LIKE", "SURE", "YOU ARE", "YOUR"]
+
+for i, elemento in lista_quien
+	{
+	if (elemento = quien_1)
+		{
+			decir_quien = one
+			quien_encontrada = 1
+		}
+	else if (elemento = quien_2)
+		{
+			decir_quien = two
+			quien_encontrada = 1
+		}
+	else if (elemento = quien_3)
+		{
+			decir_quien = three
+			quien_encontrada = 1
+		}
+	else if (elemento = quien_4)
+		{
+			decir_quien = four
+			quien_encontrada = 1
+		}
+	else if (elemento = quien_5)
+		{
+			decir_quien = five
+			quien_encontrada = 1
+		}
+	else if (elemento = quien_6)
+		{
+			decir_quien = six
+			quien_encontrada = 1
+		}
+	}until quien_encontrada = 1
+
+
+
+
+;TrayTip, reconocimiento, %Texto%
+;msgbox, %Texto% - %posicion_quien% - %buscar_quien% - %decir_quien% - %quien_1% - %quien_2% - %quien_3% - %quien_4% - %quien_5% - %quien_6%
+
+final_quien1 = %display_quien% - %quien_1% - %quien_2% - %quien_3% - %quien_4% - %quien_5% - %quien_6%
+Final_quien2 = position - %decir_quien%
+
+d.SetRate(0)
+d.SpeakWait(final_quien1)
+d.SetRate(-2)
+d.SpeakWait(Final_quien2)
+d.SetRate(0)
+
+return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exploto:
+d.SetRate(-2)
+d.SetPitch(-5)
+d.SpeakWait("this was a triumph, i'm making a note here.. HUGE SUCCESS")
+sleep 500
+return
 
 bip:
 SoundBeep, 2000, 50
 return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
@@ -952,6 +2103,14 @@ TrayTip, Speech Recognition, You said: %Text%
 ;Sleep, 3000
 return
 
+
+j::
+s.SetRate(-2)
+s.SetPitch(0)
+s.SetVolume(100)
+s.SpeakWait("Reading rate minus two and volume 100 and pitch 0")
+return
+*/
 
 j::
 s.SetRate(-2)
