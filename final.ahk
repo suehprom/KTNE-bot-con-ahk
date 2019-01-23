@@ -15,6 +15,14 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 #Include Speech Recognition.ahk
 #Include TTS.ahk
+;ventana de reconocimiento vocal
+Gui, Font, s10 w700
+Gui, Add, StatusBar, w400 h50
+SB_SetParts(0)
+Gui, Show, w400 h20 y200 x-410
+
+e := new SpeechRecognizer
+d := new TTS()
 
 baterias = 0
 digito = 0
@@ -23,6 +31,16 @@ car = "no"
 frk = "no"
 paralelo = "no"
 strike = 0
+numerofinal = ""
+iniciado = 0
+procesadouno = 0
+procesadodos = 0
+procesadotres = 0
+procesadocuatro = 0
+procesadocinco = 0
+presionar_memoria = 
+posiciones := {}
+
 
 palabralista1 := ["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada"]
 palabralista2 := ["euro", "raqueta", "cespejada", "quebec", "estrella", "hotel", "interrogacion"]
@@ -31,9 +49,11 @@ palabralista4 := ["seis", "parrafo", "bravo", "araña", "kilo", "interrogacion",
 palabralista5 := ["candelabro", "sonrisa", "bravo", "charlie", "parrafo", "tres", "estrella negra"]
 palabralista6 := ["seis", "euro", "puzzle", "ae", "candelabro", "enie", "omega"]
 palabra = 0
+lista_contrasenas := ["about", "after", "again", "below", "could", "every", "first", "found", "great", "house", "large", "learn", "never", "other", "place", "plant", "point", "right", "small", "sound", "spell", "still", "study", "their", "there", "these", "thing", "think", "three", "water", "where", "which", "world", "would", "write"]
 
-e := new SpeechRecognizer
-d := new TTS()
+
+;palabra 5 con problema charlie candelabro tres bravo
+
 return
 
 q::
@@ -46,15 +66,24 @@ ExitApp
 r::
 Reload
 
+c::
+gosub, pedirnumero
+memoria1 := numerofinal
+msgbox, %memoria1%
+return
+
 
 iniciar:
-d.SetRate(-2)
+
 
 loop{
-d.SpeakWait("ready")
+d.SetRate(0)
+d.SetPitch(0)
+SB_SetText("escuchando", 2)
+d.Speak("ready")
 gosub, bip
 
-e.Recognize(["chequear bomba", "status", "chau", "cables", "boton", "simbolos", "rojo", "azul", "verde", "amarillo", "quien", "la bomba exploto"])
+e.Recognize(["chequear bomba", "status", "chau", "cables", "boton", "simbolos", "rojo", "azul", "verde", "amarillo", "quien", "la bomba exploto", "memorias", "ganamos", "secuencia", "complicados", "contraseña", "repetir contraseña"])
 Texto := e.Prompt()
 ;TrayTip, reconocimiento, %Texto%
 ;sleep 1000
@@ -108,12 +137,39 @@ else if (Texto = "quien")
 else if (Texto = "la bomba exploto")
 	;TrayTip, reconocimiento, exploto
 	gosub, exploto
+else if (Texto = "memorias")
+	;TrayTip, reconocimiento, memoria
+	gosub, memoria
+else if (Texto = "ganamos")
+	;TrayTip, reconocimiento, ganamos
+	gosub, ganamos
+else if (Texto = "secuencia")
+	{
+	;TrayTip, reconocimiento, secuencia
+	gosub, secuencia
+	}
+else if (Texto = "complicados")
+	{
+	;TrayTip, reconocimiento, complicados
+	gosub, complicados
+	}
+else if (Texto = "contraseña")
+	{
+	;TrayTip, reconocimiento, contraseña
+	gosub, contrasena
+	}
+else if (Texto = "repetir contraseña")
+	{
+	;TrayTip, reconocimiento, repetir contraseña
+	gosub, contar_pass_final
+	}
 }
 return
 
 
 
 chequear:
+SB_SetText(Texto, 2)
 d.SetRate(0)
 d.SetPitch(0)
 d.SpeakWait("check bomb")
@@ -121,7 +177,7 @@ gosub, bip
 d.SetRate(-1)
 loop{
 
-e.Recognize(["baterias 1" , "baterias 2" , "baterias 3" , "baterias 4" , "baterias 5" , "baterias 6" , "baterias 0" , "digito 1" , "digito 2" , "digito 3" , "digito 4" , "digito 5" , "digito 6" , "digito 7" , "digito 8" , "digito 9" , "vocal no" , "vocal si" , "car no" , "car si" , "frik no" , "frik si" , "paralelo no" , "paralelo si" , "fin"])
+e.Recognize(["baterias 1" , "baterias 2" , "baterias 3" , "baterias 4" , "baterias 5" , "baterias 6" ,"baterias 7" , "baterias 0" , "digito 1" , "digito 2" , "digito 3" , "digito 4" , "digito 5" , "digito 6" , "digito 7" , "digito 8" , "digito 9" , "digito 0" , "vocal no" , "vocal si" , "car no" , "car si" , "frik no" , "frik si" , "paralelo no" , "paralelo si" , "fin"])
 Texto := e.Prompt()
 
 if (Texto = "baterias 1"){
@@ -176,6 +232,20 @@ else if (Texto = "baterias 5"){
 else if (Texto = "baterias 6"){
 	;TrayTip, reconocimiento, %Texto%
 	baterias = 6
+	d.SpeakWait("batteries "baterias)
+	gosub, bip
+	;SoundBeep, 2000, 50
+	;SoundBeep, 2000, 50
+	;sleep 200
+	;SoundBeep, 2000, 50
+	;SoundBeep, 2000, 50
+	;sleep 200
+	;SoundBeep, 2000, 50
+	;SoundBeep, 2000, 50
+}
+else if (Texto = "baterias 7"){
+	;TrayTip, reconocimiento, %Texto%
+	baterias = 7
 	d.SpeakWait("batteries "baterias)
 	gosub, bip
 	;SoundBeep, 2000, 50
@@ -312,22 +382,13 @@ else if (Texto = "fin"){
 }
 return
 
-status:
-	d.SetRate(-6)
-	status = batteries %baterias% - digit %digito% -- vocal %vocal% -- car %car% -- freak %frk% -- parallel port %paralelo%
-	d.SpeakWait(status)
-	gosub, bip
-	d.SetRate(-2)
-return
+;------------------------------------------------------------------------------------------------------------
+;---------rutina cables---------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
 
-cerrar:
-	d.SetRate(-5)
-	d.SpeakWait("goodbye")
-	gosub, bip
-	ExitApp
-return
 
 cables:
+SB_SetText(Texto, 2)
 rojo = 0
 blanco = 0
 azul = 0
@@ -343,13 +404,16 @@ cable_6 = ""
 
 d.SetRate(0)
 d.SetPitch(0)
-d.SpeakWait("cables")
+;d.SpeakWait("cables")
+d.Speak("cables")
 gosub, bip
 d.SetRate(-1)
 loop{
 
 e.Recognize(["rojo" , "blanco" , "azul" , "amarillo" , "negro" , "fin", "salir"])
 Texto := e.Prompt()
+
+SB_SetText(Texto, 2)
 
 if (Texto = "rojo"){
 	;TrayTip, reconocimiento, %Texto%
@@ -425,66 +489,75 @@ proc_cables:
 d.SetRate(-2)
 cables_total := rojo + blanco + azul + amarillo + negro
 ;d.SpeakWait(cable_1 cable_2 cable_3 cable_4 cable_5 cable_6 " cables " cables_total)
-d.SpeakWait(cable_1 cable_2 cable_3 cable_4 cable_5 cable_6)
+cablestotal := cable_1 cable_2 cable_3 cable_4 cable_5 cable_6
+;d.SpeakWait(cable_1 cable_2 cable_3 cable_4 cable_5 cable_6)
 gosub, bip
 
 d.SetRate(-4)
 if cables_total = 3
 {
 	if rojo = 0
-		d.SpeakWait("cut cable number 2 " cable_2)
+		d.SpeakWait(cablestotal " cut cable number 2 " cable_2)
 	else if cable_3 = "white"
-		d.SpeakWait("cut cable number 3 " cable_3)
+		d.SpeakWait(cablestotal " cut cable number 3 " cable_3)
 	else if azul > 1
-		d.SpeakWait("cut cable last blue")
+		d.SpeakWait(cablestotal " cut cable last blue")
 	else
-		d.SpeakWait("cut cable number 3 " cable_3)
+		d.SpeakWait(cablestotal " cut cable number 3 " cable_3)
 }
 else if cables_total = 4
 {
 	if (rojo > 1 and (digito = 1 or digito = 3 or digito = 5 or digito = 7 or digito = 9))
-		d.SpeakWait("cable last red")
-	else if (cable_4 = "yellow" and rojo = 0)
-		d.SpeakWait("cut cable number 1 " cable_1)
+		d.SpeakWait(cablestotal " cable last red")
+	else if (cable_4 = """yellow""" and rojo = 0)
+		d.SpeakWait(cablestotal " cut cable number 1 " cable_1)
 	else if azul = 1
-		d.SpeakWait("cut cable number 1 " cable_1)
+		d.SpeakWait(cablestotal " cut cable number 1 " cable_1)
 	else if amarillo > 1
-		d.SpeakWait("cut cable number 4 " cable_4)
+		d.SpeakWait(cablestotal " cut cable number 4 " cable_4)
 	else
-		d.SpeakWait("cut cable number 2 " cable_2)
+		d.SpeakWait(cablestotal " cut cable number 2 " cable_2)
 }
 else if cables_total = 5
 {
-	if (cable_5 = "black" and (digito = 1 or digito = 3 or digito = 5 or digito = 7 or digito = 9))
-		d.SpeakWait("cut cable number 4 " cable_4)
+	if (cable_5 = """black""" and (digito = 1 or digito = 3 or digito = 5 or digito = 7 or digito = 9))
+		d.SpeakWait(cablestotal " cut cable number 4 " cable_4)
 	else if rojo = 1 and amarillo > 1
-		d.SpeakWait("cut cable number 1 " cable_1)
+		d.SpeakWait(cablestotal " cut cable number 1 " cable_1)
 	else if negro = 0
-		d.SpeakWait("cut cable number 2 " cable_2)
+		d.SpeakWait(cablestotal " cut cable number 2 " cable_2)
 	else
-		d.SpeakWait("cut cable number 1 " cable_1)
+		d.SpeakWait(cablestotal " cut cable number 1 " cable_1)
 }
 else if cables_total = 6
 {
 	if (amarillo = 0 and (digito = 1 or digito = 3 or digito = 5 or digito = 7 or digito = 9))
-		d.SpeakWait("cut cable number 3 " cable_3)
+		d.SpeakWait(cablestotal " cut cable number 3 " cable_3)
 	else if (amarillo = 1 and blanco > 1)
-		d.SpeakWait("cut cable number 4 " cable_4)
+		d.SpeakWait(cablestotal " cut cable number 4 " cable_4)
 	else if rojo = 0
-		d.SpeakWait("cut cable number 6 " cable_6)
+		d.SpeakWait(cablestotal " cut cable number 6 " cable_6)
 	else
-		d.SpeakWait("cut cable number 4 " cable_4)
+		d.SpeakWait(cablestotal " cut cable number 4 " cable_4)
 }
 return
 
+;------------------------------------------------------------------------------------------------------------
+;---------rutina boton---------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
 boton:
+SB_SetText(Texto, 2)
 b_color = ""
 b_texto = ""
 d.SetRate(-1)
-d.SpeakWait("color and text")
+;d.SpeakWait("color and text")
+d.Speak("color and text")
 gosub, bip
 e.Recognize(["azul" , "blanco" , "amarillo" , "rojo"])
 Texto := e.Prompt()
+
+SB_SetText(Texto, 2)
 
 if (Texto = "azul"){
 	;TrayTip, reconocimiento, %Texto%
@@ -541,82 +614,117 @@ else if (Texto = "pres"){
 	gosub, bip
 }
 
+SB_SetText(b_texto, 2)
+
 gosub, proc_boton
 return
 
 proc_boton:
 d.SetRate(-1)
-
-d.SpeakWait(b_resu1 b_resu2)
+;d.SpeakWait(b_resu1 b_resu2)
+botonfinal := b_resu1 b_resu2
 gosub, bip
+
 ;TrayTip, reconocimiento, %b_resu1% %b_resu2% %b_texto%
 if (b_color = """azul""" and b_texto = """abort""")
 	gosub, presionar_boton
 else if (baterias > 1 and b_texto = """detonate""")
-	d.SpeakWait("press and release")
+	d.SpeakWait(botonfinal " press and release")
 else if (b_color = """blanco""" and car = """yes""")
 	gosub, presionar_boton
 else if (baterias > 2 and frk = """yes""")
-	d.SpeakWait("press and release")
+	d.SpeakWait(botonfinal " press and release")
 else if b_color = """amarillo"""
 	gosub, presionar_boton
 else if (b_color = """rojo""" and b_texto = """hold""")
-	d.SpeakWait("press and release")
+	d.SpeakWait(botonfinal " press and release")
 else
 	gosub, presionar_boton
 return
 
 presionar_boton:
-d.SpeakWait("press and hold, strip color")
+d.Speak(botonfinal "hold the button, strip color")
 gosub, bip
 e.Recognize(["azul" , "blanco" , "amarillo" , "rojo"])
 Texto := e.Prompt()
+SB_SetText(Texto, 2)
 
 if (Texto = "azul"){
 	;TrayTip, reconocimiento, %Texto%
+	SB_SetText("release on four", 2)
 	d.SpeakWait("release on four")
-	gosub, bip
 }
 else if (Texto = "blanco"){
 	;TrayTip, reconocimiento, %Texto%
+	SB_SetText("release on one", 2)
 	d.SpeakWait("release on one")
-	gosub, bip
 }
 else if (Texto = "amarillo"){
 	;TrayTip, reconocimiento, %Texto%
+	SB_SetText("release on five", 2)
 	d.SpeakWait("release on five")
-	gosub, bip
 }
 else if (Texto = "rojo"){
 	;TrayTip, reconocimiento, %Texto%
+	SB_SetText("release on one", 2)
 	d.SpeakWait("release on one")
-	gosub, bip
 }
 return
 
-simbolos:
-d.SpeakWait("ready")
-SoundBeep, 2000, 50
-palabra1 = ""
-palabra2 = ""
-palabra3 = ""
-palabra4 = ""
+;------------------------------------------------------------------------------------------------------------
+;---------rutina simbolos------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
 
+simbolos:
+;limpio variables
+elemento =
+elemento2 =
+elemento3 =
+elemento4 =
+palabra = 0
+;palabrabuscar = 0
+;posiciones := {}
+;palabra = ""
+;letra1 = ""
+;letra2 = ""
+;letra3 = ""
+;letra4 = ""
+;palabra1 = ""
+;palabra2 = ""
+;palabra3 = ""
+;palabra4 = ""
+
+;msgbox, %palabra%
+
+;para probar todas las palabras
+;raqueta - alfa - lambda - november
+;euro - raqueta - cespejada - quebec
+;copyright - whisky - quebec - kilo
+;seis - parrafo - bravo - araña
+;candelabro - sonrisa - bravo - charlie
+;seis - euro - puzzle - ae
+
+SB_SetText(Texto, 2)
+d.SpeakWait("simbols")
+SoundBeep, 2000, 50
 
 e.Recognize(["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
 letra1 := e.Prompt()
 TrayTip, reconocimiento, %letra1%
+SB_SetText(letra1, 2)
 SoundBeep, 2000, 50
 
 e.Recognize(["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
 letra2 := e.Prompt()
 TrayTip, reconocimiento, %letra2%
+SB_SetText(letra2, 2)
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 
 e.Recognize(["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
 letra3 := e.Prompt()
 TrayTip, reconocimiento, %letra3%
+SB_SetText(letra3, 2)
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 sleep 200
@@ -625,6 +733,7 @@ SoundBeep, 2000, 50
 e.Recognize(["raqueta", "alfa", "lambda", "november", "araña", "hotel", "cespejada", "euro", "quebec", "estrella", "interrogacion", "copyright", "whisky", "kilo", "romeo", "seis", "parrafo", "bravo", "sonrisa", "candelabro", "charlie", "tres", "estrella negra", "puzzle", "ae", "enie", "omega"])
 letra4 := e.Prompt()
 TrayTip, reconocimiento, %letra4%
+SB_SetText(letra4, 2)
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 sleep 200
@@ -857,13 +966,18 @@ for i, elemento in palabrabuscar
 	}
 ;msgbox, fin lista %palabra% - %letra1% - %letra2% - %letra3% - %letra4%
 ;msgbox, %decir_final%
+SB_SetText(decir_final, 2)
 d.SetRate(-6)
 d.SpeakWait(decir_final)
+
 return
 
-
+;------------------------------------------------------------------------------------------------------------
+;---------rutina simon---------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
 
 simon:
+
 decir_simon = ""
 ;rojo azul verde amarillo
 ;red blue green yellow
@@ -876,19 +990,19 @@ if vocal = "yes"
         ;sin strike si vocal
         if color_simon = "simon rojo"
         {
-            decir_simon = "blue"
+            decir_simon = blue
         }
         else if color_simon = "simon azul"
         {
-            decir_simon = "red"
+            decir_simon = red
         }
         else if color_simon = "simon verde"
         {
-            decir_simon = "yellow"
+            decir_simon = yellow
         }
         else if color_simon = "simon amarillo"
         {
-            decir_simon = "green"
+            decir_simon = green
         }
     }
     else if strike = 1
@@ -896,19 +1010,19 @@ if vocal = "yes"
         ;1 strike si vocal
         if color_simon = "simon rojo"
         {
-            decir_simon = "yellow"
+            decir_simon = yellow
         }
         else if color_simon = "simon azul"
         {
-            decir_simon = "green"
+            decir_simon = green
         }
         else if color_simon = "simon verde"
         {
-            decir_simon = "blue"
+            decir_simon = blue
         }
         else if color_simon = "simon amarillo"
         {
-            decir_simon = "red"
+            decir_simon = red
         }
     }
     else
@@ -916,19 +1030,19 @@ if vocal = "yes"
         ;mas de un strike si vocal
         if color_simon = "simon rojo"
         {
-            decir_simon = "green"
+            decir_simon = green
         }
         else if color_simon = "simon azul"
         {
-            decir_simon = "red"
+            decir_simon = red
         }
         else if color_simon = "simon verde"
         {
-            decir_simon = "yellow"
+            decir_simon = yellow
         }
         else if color_simon = "simon amarillo"
         {
-            decir_simon = "blue"
+            decir_simon = blue
         }
     }
 }
@@ -940,19 +1054,19 @@ else
         ;sin strike no vocal
         if color_simon = "simon rojo"
         {
-            decir_simon = "blue"
+            decir_simon = blue
         }
         else if color_simon = "simon azul"
         {
-            decir_simon = "yellow"
+            decir_simon = yellow
         }
         else if color_simon = "simon verde"
         {
-            decir_simon = "green"
+            decir_simon = green
         }
         else if color_simon = "simon amarillo"
         {
-            decir_simon = "red"
+            decir_simon = red
         }
     }
     else if strike = 1
@@ -960,19 +1074,19 @@ else
         ;1 strike no vocal
         if color_simon = "simon rojo"
         {
-            decir_simon = "red"
+            decir_simon = red
         }
         else if color_simon = "simon azul"
         {
-            decir_simon = "blue"
+            decir_simon = blue
         }
         else if color_simon = "simon verde"
         {
-            decir_simon = "yellow"
+            decir_simon = yellow
         }
         else if color_simon = "simon amarillo"
         {
-            decir_simon = "green"
+            decir_simon = green
         }
     }
     else
@@ -980,31 +1094,42 @@ else
         ;mas de un strike no vocal
         if color_simon = "simon rojo"
         {
-            decir_simon = "yellow"
+            decir_simon = yellow
         }
         else if color_simon = "simon azul"
         {
-            decir_simon = "green"
+            decir_simon = green
         }
         else if color_simon = "simon verde"
         {
-            decir_simon = "blue"
+            decir_simon = blue
         }
         else if color_simon = "simon amarillo"
         {
-            decir_simon = "red"
+            decir_simon = red
         }
     }
 }
 ;msgbox, %color_simon% - %decir_simon%
 
-d.SetRate(-4)
-d.Speak(decir_simon)
+simonfinal = %Texto% - %decir_simon%
+
+SB_SetText(simonfinal, 2)
+
+d.SetRate(-2)
+d.SpeakWait(decir_simon)
 d.SetRate(-2)
 
 return
 
+
+;------------------------------------------------------------------------------------------------------------
+;---------rutina quien---------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+
 quien:
+SB_SetText(Texto, 2)
 posicion_quien = 0
 buscar_quien = 
 lista_quien := [""]
@@ -1113,10 +1238,8 @@ else if (Texto = "whisky tango interrogacion")
 	Texto = WHAT?
 else if (Texto = "salir")
 	return
-
-
-
 display_quien := Texto
+SB_SetText(Texto, 2)
 
 ;chequeo que posicion buscar
 
@@ -1230,6 +1353,7 @@ else if (Texto = "whisky tango interrogacion")
 	Texto = WHAT?
 
 quien_1 = %Texto%
+SB_SetText(Texto, 2)
 SoundBeep, 2000, 50
 
 
@@ -1329,6 +1453,7 @@ else if (Texto = "whisky tango interrogacion")
 	Texto = WHAT?
 
 quien_2 = %Texto%
+SB_SetText(Texto, 2)
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 
@@ -1429,6 +1554,7 @@ else if (Texto = "whisky tango interrogacion")
 	Texto = WHAT?
 
 quien_3 = %Texto%
+SB_SetText(Texto, 2)
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 sleep 100
@@ -1531,6 +1657,7 @@ else if (Texto = "whisky tango interrogacion")
 	Texto = WHAT?
 
 quien_4 = %Texto%
+SB_SetText(Texto, 2)
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 sleep 100
@@ -1634,6 +1761,7 @@ else if (Texto = "whisky tango interrogacion")
 	Texto = WHAT?
 
 quien_5 = %Texto%
+SB_SetText(Texto, 2)
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 sleep 100
@@ -1739,6 +1867,7 @@ else if (Texto = "whisky tango interrogacion")
 	Texto = WHAT?
 
 quien_6 = %Texto%
+SB_SetText(Texto, 2)
 SoundBeep, 2000, 50
 SoundBeep, 2000, 50
 sleep 100
@@ -1861,11 +1990,14 @@ for i, elemento in lista_quien
 ;TrayTip, reconocimiento, %Texto%
 ;msgbox, %Texto% - %posicion_quien% - %buscar_quien% - %decir_quien% - %quien_1% - %quien_2% - %quien_3% - %quien_4% - %quien_5% - %quien_6%
 
-final_quien1 = %display_quien% - %quien_1% - %quien_2% - %quien_3% - %quien_4% - %quien_5% - %quien_6%
+;final_quien1 = %display_quien% - %quien_1% - %quien_2% - %quien_3% - %quien_4% - %quien_5% - %quien_6% - %decir_quien%
+final_quien1 = %decir_quien%
 Final_quien2 = position - %decir_quien%
 
-d.SetRate(0)
-d.SpeakWait(final_quien1)
+SB_SetText(final_quien1, 2)
+
+;d.SetRate(0)
+;d.SpeakWait(final_quien1)
 d.SetRate(-2)
 d.SpeakWait(Final_quien2)
 d.SetRate(0)
@@ -1874,6 +2006,1289 @@ return
 
 
 
+;------------------------------------------------------------------------------------------------------------
+;---------rutina memorias------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+
+
+memoria:
+
+if procesadouno = 0
+	{
+	gosub, procesaruno
+	return
+	}
+else if procesadodos = 0
+	{
+	gosub, procesardos
+	return
+	}
+else if procesadotres = 0
+	{
+	gosub, porcesartres
+	return
+	}
+else if procesadocuatro = 0
+	{
+	gosub, procesarcuatro
+	return
+	}
+else if procesadocinco = 0
+	{
+	gosub, procesarcinco
+	return
+	}
+else
+	{
+	procesadouno = 0
+	procesadodos = 0
+	procesadotres = 0
+	procesadocuatro = 0
+	procesadocinco = 0
+	gosub, memoria
+	}
+
+return
+
+procesaruno:
+;--------------------------------------------rutina de pedir memoria1
+;rutina de decir memoria1
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 1", 2)
+d.SpeakWait("sequence 1")
+
+gosub, pedirnumero
+
+if (numerook = 1)
+	{
+	memoria1 := numerofinal
+	vai := SubStr(memoria1, 1 , 1)
+	va1 := SubStr(memoria1, 2 , 1)
+	va2 := SubStr(memoria1, 3 , 1)
+	va3 := SubStr(memoria1, 4 , 1)
+	va4 := SubStr(memoria1, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+
+;MsgBox %memoria1% - %vai% - %va1% - %va2% - %va3% - %va4%
+SB_SetText(memoria1, 2)
+
+if vai = 1
+	{
+		;si es 1 presionar segunda posicion
+		posiciones.Insert("num1", {pos:2,valor:va2})
+		presionar_memoria = %va2%
+	}
+else if vai = 2
+	{
+		;si es 2 presionar segunda posicion
+		posiciones.Insert("num1", {pos:2,valor:va2})
+		presionar_memoria = %va2%
+	}
+else if vai = 3
+	{
+		;si es 3 presionar segunda posicion
+		posiciones.Insert("num1", {pos:3,valor:va3})
+		presionar_memoria = %va3%
+	}
+else if vai = 4
+	{
+		;si es 4 presionar cuarta posicion
+		posiciones.Insert("num1", {pos:4,valor:va4})
+		presionar_memoria = %va4%
+	}
+
+;prueba = num1
+;valor := posiciones[prueba].valor
+;posicion := posiciones[prueba].pos
+;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
+
+;msgbox, memoria numero 1: %presionar_memoria%
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadouno = 1
+return
+
+procesardos:
+;--------------------------------------------rutina de pedir memoria2
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 2", 2)
+d.SpeakWait("sequence 2")
+
+gosub, pedirnumero
+
+if numerook = 1
+	{
+	memoria2 := numerofinal
+	vbi := SubStr(memoria2, 1 , 1)
+	vb1 := SubStr(memoria2, 2 , 1)
+	vb2 := SubStr(memoria2, 3 , 1)
+	vb3 := SubStr(memoria2, 4 , 1)
+	vb4 := SubStr(memoria2, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+SB_SetText(memoria2, 2)
+;MsgBox %memoria2% - %vbi% - %vb1% - %vb2% - %vb3% - %vb4%
+
+if vbi = 1
+	{
+		;si es 1 presionar el que dice 4
+		if vb1 = 4
+			pos_temp = 1
+		else if vb2 = 4
+			pos_temp = 2
+		else if vb3 = 4
+			pos_temp = 3
+		else if vb4 = 4
+			pos_temp = 4
+		posiciones.Insert("num2", {pos:pos_temp,valor:4})
+		presionar_memoria = 4
+	}
+else if vbi = 2
+	{
+		;si es 2 presionar misma posicion que num1
+		pos_temp := posiciones["num1"].pos
+		val_temp := vb%pos_temp%		
+		posiciones.Insert("num2", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vbi = 3
+	{
+		;si es 3 presionar primera posicion
+		posiciones.Insert("num2", {pos:1,valor:vb1})
+		presionar_memoria = %vb1%
+	}
+else if vbi = 4
+	{
+		;si es 4 presionar misma posicion que num1
+		pos_temp := posiciones["num1"].pos
+		val_temp := vb%pos_temp%
+		posiciones.Insert("num2", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+
+;prueba = num2
+;valor := posiciones[prueba].valor
+;posicion := posiciones[prueba].pos
+;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
+
+;msgbox, memoria numero 2: %presionar_memoria%
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadodos = 1
+return
+
+porcesartres:
+;--------------------------------------------rutina de pedir memoria3
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 3", 2)
+d.SpeakWait("sequence 3")
+
+gosub, pedirnumero
+
+if numerook = 1
+	{
+	memoria3 := numerofinal
+	vci := SubStr(memoria3, 1 , 1)
+	vc1 := SubStr(memoria3, 2 , 1)
+	vc2 := SubStr(memoria3, 3 , 1)
+	vc3 := SubStr(memoria3, 4 , 1)
+	vc4 := SubStr(memoria3, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+;MsgBox %memoria3% - %vai% - %va1% - %va2% - %va3% - %va4%
+SB_SetText(memoria3, 2)
+if vci = 1
+	{
+		;si es 1 presionar el mismo valor de num2
+		val_temp := posiciones["num2"].valor
+		if (val_temp = vc1)
+			pos_temp = 1
+		else if (val_temp = vc2)
+			pos_temp = 2
+		else if (val_temp = vc3)
+			pos_temp = 3
+		else if (val_temp = vc4)
+			pos_temp = 4
+		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vci = 2
+	{
+		;si es 2 presionar el mismo valor de num1
+		val_temp := posiciones["num1"].valor
+		if (val_temp = vc1)
+			pos_temp = 1
+		else if (val_temp = vc2)
+			pos_temp = 2
+		else if (val_temp = vc3)
+			pos_temp = 3
+		else if (val_temp = vc4)
+			pos_temp = 4
+		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vci = 3
+	{
+		;si es 3 presionar tercera posicion
+		posiciones.Insert("num3", {pos:3,valor:vc3})
+		presionar_memoria = %vc3%
+	}
+else if vci = 4
+	{
+		;si es 4 presionar valor 4
+		if vc1 = 4
+			pos_temp = 1
+		else if vc2 = 4
+			pos_temp = 2
+		else if vc3 = 4
+			pos_temp = 3
+		else if vc4 = 4
+			pos_temp = 4
+		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+
+;prueba = num3
+;valor := posiciones[prueba].valor
+;posicion := posiciones[prueba].pos
+;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
+;msgbox, memoria numero 3: %presionar_memoria%
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadotres = 1
+return
+
+procesarcuatro:
+;--------------------------------------------rutina de pedir memoria4
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 4", 2)
+d.SpeakWait("sequence 4")
+
+gosub, pedirnumero
+
+if numerook = 1
+	{
+	memoria4 := numerofinal
+	vdi := SubStr(memoria4, 1 , 1)
+	vd1 := SubStr(memoria4, 2 , 1)
+	vd2 := SubStr(memoria4, 3 , 1)
+	vd3 := SubStr(memoria4, 4 , 1)
+	vd4 := SubStr(memoria4, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+;MsgBox %memoria4% - %vai% - %va1% - %va2% - %va3% - %va4%
+SB_SetText(memoria4, 2)
+if vdi = 1
+	{
+		;si es 1 presionar la misma posicion en num1
+		pos_temp := posiciones["num1"].pos
+		val_temp := vd%pos_temp%		
+		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vdi = 2
+	{
+		;si es 2 presionar en la posicion 1
+		posiciones.Insert("num4", {pos:1,valor:vd1})
+		presionar_memoria = %vd1%
+	}
+else if vdi = 3
+	{
+		;si es 3 presionar misma posicion en num2
+		pos_temp := posiciones["num2"].pos
+		val_temp := vd%pos_temp%		
+		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vdi = 4
+	{
+		;si es 4 presionar misma posicion en num2
+		pos_temp := posiciones["num2"].pos
+		val_temp := vd%pos_temp%		
+		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+
+;prueba = num4
+;valor := posiciones[prueba].valor
+;posicion := posiciones[prueba].pos
+;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
+
+;msgbox, memoria numero 4: %presionar_memoria%
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadocuatro = 1
+return
+
+procesarcinco:
+;--------------------------------------------rutina de pedir memoria5
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 5", 2)
+d.SpeakWait("sequence 5")
+
+gosub, pedirnumero
+
+if numerook = 1
+	{
+	memoria5 := numerofinal
+	vei := SubStr(memoria5, 1 , 1)
+	ve1 := SubStr(memoria5, 2 , 1)
+	ve2 := SubStr(memoria5, 3 , 1)
+	ve3 := SubStr(memoria5, 4 , 1)
+	ve4 := SubStr(memoria5, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+;MsgBox %memoria5% - %vai% - %va1% - %va2% - %va3% - %va4%
+SB_SetText(memoria5, 2)
+if vei = 1
+	{
+	;si es 1 mismo valor que num1
+	val_temp := posiciones["num1"].valor
+	presionar_memoria = %val_temp%
+	}
+else if vei = 2
+	{
+	;si es 2 mismo valor que num2
+	val_temp := posiciones["num2"].valor
+	presionar_memoria = %val_temp%
+	}
+else if vei = 3
+	{
+	;si es 3 mismo valor que num4
+	val_temp := posiciones["num4"].valor
+	presionar_memoria = %val_temp%
+	}
+else if vei = 4
+	{
+	;si es 4 mismo valor que nume3
+	val_temp := posiciones["num3"].valor
+	presionar_memoria = %val_temp%
+	}
+
+;msgbox, memoria numero5: %presionar_memoria%
+
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadocinco = 1
+return
+
+
+
+pedirnumero:
+;--------------------------------------------rutina de pedir numero
+numerook = 0
+
+;pedir numero1
+gosub, bip
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero1 := e.Prompt()
+if (numero1 = "salir")
+	{
+	return
+	}
+
+SB_SetText("1: "numero1, 2)
+gosub, bip
+
+;pedir numero2
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero2 := e.Prompt()
+if (numero2 = "salir")
+	{
+	return
+	}
+
+SB_SetText("2: "numero2, 2)
+gosub, bip
+
+;pedir numero3
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero3 := e.Prompt()
+if (numero3 = "salir")
+	{
+	return
+	}
+
+SB_SetText("3: "numero3, 2)
+gosub, bip
+
+;pedir numero4
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero4 := e.Prompt()
+if (numero4 = "salir")
+	{
+	return
+	}
+
+SB_SetText("4: "numero4, 2)
+gosub, bip
+
+;pedir numero5
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero5 := e.Prompt()
+if (numero5 = "salir")
+	{
+	return
+	}
+
+SB_SetText("5: "numero5, 2)
+gosub, bip
+
+numerofinal := numero1 numero2 numero3 numero4 numero5
+numerook = 1
+
+return
+
+
+
+;------------------------------------------------------------------------------------------------------------
+;---------rutinas secuencia cables---------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+
+
+secuencia:
+rojo = 0
+azul = 0
+negro = 0
+letra = ""
+cable_actual = ""
+
+d.SetRate(0)
+d.SetPitch(0)
+SB_SetText("secuencia", 2)
+d.Speak("sequence")
+
+
+loop{
+gosub, bip
+
+e.Recognize(["rojo alfa", "rojo bravo", "rojo charlie", "azul alfa", "azul bravo", "azul charlie", "negro alfa", "negro bravo", "negro charlie", "fin"])
+Texto := e.Prompt()
+
+if (Texto = "fin")
+	{
+	SB_SetText("fin", 2)
+	break
+	}
+else if (Texto = "rojo alfa")
+	{
+	rojo := rojo + 1
+	letra = a
+	cable_actual = rojo
+	gosub, proc_seq
+	}
+else if (Texto = "rojo bravo")
+	{
+	rojo := rojo + 1
+	letra = b
+	cable_actual = rojo
+	gosub, proc_seq
+	}
+else if (Texto = "rojo charlie")
+	{
+	rojo := rojo + 1
+	letra = c
+	cable_actual = rojo
+	gosub, proc_seq
+	}
+else if (Texto = "azul alfa")
+	{
+	azul := azul + 1
+	letra = a
+	cable_actual = azul
+	gosub, proc_seq
+	}
+else if (Texto = "azul bravo")
+	{
+	azul := azul + 1
+	letra = b
+	cable_actual = azul
+	gosub, proc_seq
+	}
+else if (Texto = "azul charlie")
+	{
+	azul := azul + 1
+	letra = c
+	cable_actual = azul
+	gosub, proc_seq
+	}
+else if (Texto = "negro alfa")
+	{
+	negro := negro + 1
+	letra = a
+	cable_actual = negro
+	gosub, proc_seq
+	}
+else if (Texto = "negro bravo")
+	{
+	negro := negro + 1
+	letra = b
+	cable_actual = negro
+	gosub, proc_seq
+	}
+else if (Texto = "negro charlie")
+	{
+	negro := negro + 1
+	letra = c
+	cable_actual = negro
+	gosub, proc_seq
+	}
+}
+return
+
+proc_seq:
+secuencia_decir = ""
+;SB_SetText(Texto " - " letra " - " rojo " - " azul " - " negro, 2)
+;aca proceso la secuencia
+
+if (cable_actual = "rojo")
+	{
+	;rutina de los rojos
+	if rojo = 1
+		{
+		if (letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if rojo = 2
+		{
+		if (letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if rojo = 3
+		{
+		if (letra = "a")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if rojo = 4
+		{
+		if (letra = "a" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if rojo = 5
+		{
+		if (letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if rojo = 6
+		{
+		if (letra = "a" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if rojo = 7
+		{
+		if (letra = "a" or letra = "b" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if rojo = 8
+		{
+		if (letra = "a" or letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if rojo = 9
+		{
+		if (letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	}
+else if (cable_actual = "azul")
+	{
+	;rutina de los azules
+	if azul = 1
+		{
+		if (letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if azul = 2
+		{
+		if (letra = "a" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if azul = 3
+		{
+		if (letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if azul = 4
+		{
+		if (letra = "a")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if azul = 5
+		{
+		if (letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if azul = 6
+		{
+		if (letra = "b" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if azul = 7
+		{
+		if (letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if azul = 8
+		{
+		if (letra = "a" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if azul = 9
+		{
+		if (letra = "a")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	}
+else if (cable_actual = "negro")
+	{
+	;rutina de los negros
+	if negro = 1
+		{
+		if (letra = "a" or letra = "b" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if negro = 2
+		{
+		if (letra = "a" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if negro = 3
+		{
+		if (letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if negro = 4
+		{
+		if (letra = "a" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if negro = 5
+		{
+		if (letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if negro = 6
+		{
+		if (letra = "b" or letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if negro = 7
+		{
+		if (letra = "a" or letra = "b")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if negro = 8
+		{
+		if (letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	else if negro = 9
+		{
+		if (letra = "c")
+			{
+			gosub, seq_cortar
+			}
+		else
+			{
+			gosub, seq_nocortar
+			}
+		}
+	}
+
+;decir secuencia
+d.SpeakWait(secuencia_decir)
+return
+
+seq_nocortar:
+secuencia_decir = no
+SB_SetText(Texto " - " letra " - " rojo " - " azul " - " negro " - NO cortar", 2)
+return
+
+seq_cortar:
+secuencia_decir = cut
+SB_SetText(Texto " - " letra " - " rojo " - " azul " - " negro " - cortar", 2)
+return
+
+
+
+;------------------------------------------------------------------------------------------------------------
+;---------rutinas complicados------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+
+complicados:
+d.SetRate(0)
+d.SetPitch(0)
+SB_SetText("cables complicados", 2)
+d.SpeakWai("complicated")
+
+loop {
+c_rojo = 0
+c_azul = 0
+c_estrella = 0
+c_led = 0
+d.Speak("cable")
+
+loop {
+gosub, bip
+e.Recognize(["rojo", "azul", "estrella", "led", "fin", "salir"])
+Texto := e.Prompt()
+
+if (Texto = "fin")
+	{
+	SB_SetText("fin", 2)
+	break
+	}
+else if (Texto = "salir")
+	{
+	return
+	}
+else if (Texto = "rojo")
+	{
+	SB_SetText("rojo", 2)
+	c_rojo = 1
+	}
+else if (Texto = "azul")
+	{
+	SB_SetText("azul", 2)
+	c_azul = 1
+	}
+else if (Texto = "estrella")
+	{
+	SB_SetText("estrella", 2)
+	c_estrella = 1
+	}
+else if (Texto = "led")
+	{
+	SB_SetText("led", 2)
+	c_led = 1
+	}
+}
+
+
+;nada -> c
+if (c_rojo = 0 and c_azul = 0 and c_estrella = 0 and c_led = 0)
+	{
+	gosub, complicados_c
+	}
+;rojo -> s
+else if (c_rojo = 1 and c_azul = 0 and c_estrella = 0 and c_led = 0)
+	{
+	gosub, complicados_s
+	}
+;led -> d
+else if (c_rojo = 0 and c_azul = 0 and c_estrella = 0 and c_led = 1)
+	{
+	gosub, complicados_d
+	}
+;azul -> s
+else if (c_rojo = 0 and c_azul = 1 and c_estrella = 0 and c_led = 0)
+	{
+	gosub, complicados_s
+	}
+;estrella -> c
+else if (c_rojo = 0 and c_azul = 0 and c_estrella = 1 and c_led = 0)
+	{
+	gosub, complicados_c
+	}
+;rojo estrella -> c
+else if (c_rojo = 1 and c_azul = 0 and c_estrella = 1 and c_led = 0)
+	{
+	gosub, complicados_c
+	}
+;rojo azul -> s
+else if (c_rojo = 1 and c_azul = 1 and c_estrella = 0 and c_led = 0)
+	{
+	gosub, complicados_s
+	}
+;azul led -> p
+else if (c_rojo = 0 and c_azul = 1 and c_estrella = 0 and c_led = 1)
+	{
+	gosub, complicados_p
+	}
+;rojo led -> b
+else if (c_rojo = 1 and c_azul = 0 and c_estrella = 0 and c_led = 1)
+	{
+	gosub, complicados_b
+	}
+;estrella led -> b
+else if (c_rojo = 0 and c_azul = 0 and c_estrella = 1 and c_led = 1)
+	{
+	gosub, complicados_b
+	}
+;estrella azul -> d
+else if (c_rojo = 0 and c_azul = 1 and c_estrella = 1 and c_led = 0)
+	{
+	gosub, complicados_d
+	}
+;rojo azul estrella -> p
+else if (c_rojo = 1 and c_azul = 1 and c_estrella = 1 and c_led = 0)
+	{
+	gosub, complicados_p
+	}
+;azul led rojo -> s
+else if (c_rojo = 1 and c_azul = 1 and c_estrella = 0 and c_led = 1)
+	{
+	gosub, complicados_s
+	}
+;azul led estrella -> p
+else if (c_rojo = 0 and c_azul = 1 and c_estrella = 1 and c_led = 1)
+	{
+	gosub, complicados_p
+	}
+;rojo estrella led  -> b
+else if (c_rojo = 1 and c_azul = 0 and c_estrella = 1 and c_led = 1)
+	{
+	gosub, complicados_b
+	}
+;estrella rojo azul led -> d
+else if (c_rojo = 1 and c_azul = 1 and c_estrella = 1 and c_led = 1)
+	{
+	gosub, complicados_d
+	}
+
+}
+return
+
+complicados_c:
+gosub, complicados_cortar
+return
+
+complicados_d:
+gosub, complicados_nocortar
+return
+
+complicados_s:
+;cortar si el ultimo digito es par
+if (digito = 0 or digito = 2 or digito = 4 or digito = 6 or digito = 8)
+	{
+	gosub, complicados_cortar
+	}
+else
+	{
+	gosub, complicados_nocortar
+	}
+return
+
+complicados_p:
+;cortar si tiene puerto paralelo
+if (paralelo = """yes""")
+	{
+	gosub, complicados_cortar
+	}
+else
+	{
+	gosub, complicados_nocortar
+	}
+return
+
+complicados_b:
+;cortar si tiene 2 o mas baterias >1
+if baterias > 1
+	{
+	gosub, complicados_cortar
+	}
+else
+	{
+	gosub, complicados_nocortar
+	}
+return
+
+
+complicados_cortar:
+d.SetRate(-2)
+d.SpeakWait("cut")
+return
+
+complicados_nocortar:
+d.SetRate(-2)
+d.SpeakWait("no")
+return
+
+
+
+;------------------------------------------------------------------------------------------------------------
+;---------rutina contrasenas---------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+
+contrasena:
+cont_palabra_sub1 := ""
+cont_palabra_sub2 := ""
+cont_palabra_sub3 := ""
+cont_palabra_sub4 := ""
+contr_final := ""
+contrasena_encontrada = 0
+fila_1 := []
+fila_2 := []
+fila_3 := []
+fila_4 := []
+
+d.SetRate(0)
+d.SetPitch(0)
+SB_SetText("contraseña", 2)
+d.SpeakWait("password first")
+gosub, bip
+gosub, pedir_fila
+fila_1 := filatemp
+
+d.SpeakWait("second")
+gosub, bip
+gosub, pedir_fila
+fila_2 := filatemp
+
+d.SpeakWait("third")
+gosub, bip
+gosub, pedir_fila
+fila_3 := filatemp
+
+d.SpeakWait("fourth")
+gosub, bip
+gosub, pedir_fila
+fila_4 := filatemp
+
+for i, palabra_c in lista_contrasenas
+{
+;seteo las letras de la palabra
+cont_palabra_sub1 := SubStr(palabra_c, 1 , 1)
+cont_palabra_sub2 := SubStr(palabra_c, 2 , 1)
+cont_palabra_sub3 := SubStr(palabra_c, 3 , 1)
+cont_palabra_sub4 := SubStr(palabra_c, 4 , 1)
+
+	for j, cont_letra1 in fila_1
+	{
+		if (cont_letra1 = cont_palabra_sub1)
+		{
+			for l, cont_letra2 in fila_2
+			{
+				if (cont_letra2 = cont_palabra_sub2)
+				{
+					for k, cont_letra3 in fila_3
+					{
+						if (cont_letra3 = cont_palabra_sub3)
+						{
+							for h, cont_letra4 in fila_4
+							{
+								if (cont_letra4 = cont_palabra_sub4)
+								{
+									contr_final := palabra_c
+									contrasena_encontrada = 1
+								}
+							}until contrasena_encontrada = 1
+						}
+					}until contrasena_encontrada = 1
+				}
+			}until contrasena_encontrada = 1
+		}
+	}until contrasena_encontrada = 1
+;msgbox, palabra procesada: %palabra%
+}until contrasena_encontrada = 1
+
+gosub, relatar_contr
+gosub, contar_pass_final
+
+return
+
+pedir_fila:
+filatemp := []
+puntero_array = 0
+;filatemp
+loop 6 {
+
+e.Recognize(["alfa", "bravo", "charlie", "delta", "eco", "foxtrot", "golf", "hotel", "india", "juliet", "kilo", "lima", "mike", "november", "oscar", "papa", "quebec", "romeo", "sierra", "tango", "unicorn", "victor", "whisky", "xray", "yanki", "zulu", "fin"])
+Texto := e.Prompt()
+SB_SetText(Texto, 2)
+gosub, bip
+
+if Texto = fin
+	{
+	;gosub, mostrararray
+	break
+	}
+
+Texto := SubStr(Texto, 1 , 1)
+
+puntero_array += 1
+filatemp[puntero_array] := Texto
+
+}
+return
+
+mostrararray:
+contr_temp := ""
+
+For key, letra in filatemp
+	contr_temp = %contr_temp%%letra%
+
+msgbox, %contr_temp%
+return
+
+relatar_contr:
+if contr_final = about
+	decir_contra_final = - alfa - bravo - oscar - uniform
+else if contr_final = after
+	decir_contra_final = - alfa - foxtrot - tango - eco
+else if contr_final = again
+	decir_contra_final = - alfa - golf - alfa - india
+else if contr_final = below
+	decir_contra_final = - bravo - eco - lime - oscar
+else if contr_final = could
+	decir_contra_final = - charlie - oscar - uniform - lima
+else if contr_final = every
+	decir_contra_final = - eco - victor - eco - romeo
+else if contr_final = first
+	decir_contra_final = - foxtrot - india - romeo - sierra
+else if contr_final = found
+	decir_contra_final = - foxtrot - oscar - uniform - november
+else if contr_final = great
+	decir_contra_final = - golf - romeo - eco - alfa
+else if contr_final = house
+	decir_contra_final = - hotel - oscar - uniform - sierra
+else if contr_final = large
+	decir_contra_final = - lima - alfa - romeo - golf
+else if contr_final = learn
+	decir_contra_final = - lima - eco - alfa - romeo
+else if contr_final = never
+	decir_contra_final = - november - eco - victor - eco
+else if contr_final = other
+	decir_contra_final = - oscar - tango - hotel - eco
+else if contr_final = place
+	decir_contra_final = - papa - lima - alfa - charlie
+else if contr_final = plant
+	decir_contra_final = - papa - lima - alfa - november
+else if contr_final = point
+	decir_contra_final = - papa - oscar - india - november
+else if contr_final = right
+	decir_contra_final = - romeo - india - golf - hotel
+else if contr_final = small
+	decir_contra_final = - sierra - mike - alfa - lima
+else if contr_final = sound
+	decir_contra_final = - sierra - oscar - uniform - november
+else if contr_final = spell
+	decir_contra_final = - sierra - papa - eco - lima
+else if contr_final = still
+	decir_contra_final = - sierra - tango - india - lima
+else if contr_final = study
+	decir_contra_final = - sierra - tango - uniform - delta
+else if contr_final = their
+	decir_contra_final = - tango - hotel - eco - india
+else if contr_final = there
+	decir_contra_final = - tango - hotel - eco - romeo
+else if contr_final = these
+	decir_contra_final = - tango - hotel - eco - sierra
+else if contr_final = thing
+	decir_contra_final = - tango - hotel - india - november
+else if contr_final = think
+	decir_contra_final = - tango - hotel - india - november - kilo
+else if contr_final = three
+	decir_contra_final = - tango - hotel - romeo - eco
+else if contr_final = water
+	decir_contra_final = - whiskey - alfa - tango - eco
+else if contr_final = where
+	decir_contra_final = - whiskey - hotel - eco - romeo
+else if contr_final = which
+	decir_contra_final = - whiskey - hotel - india - charlie
+else if contr_final = world
+	decir_contra_final = - whiskey - oscar - romeo - lima
+else if contr_final = would
+	decir_contra_final = - whiskey - oscar - unform - lima
+else if contr_final = write
+	decir_contra_final = - whiskey - romeo - india - tango
+return
+
+contar_pass_final:
+;msgbox, palabra encontra: %contr_final%
+d.SetRate(-2)
+d.SetPitch(0)
+;decir_contra_final = %contr_final% %decir_contra_final%
+SB_SetText(contr_final " " decir_contra_final, 2)
+d.SpeakWait("the password is -" contr_final " - " decir_contra_final)
+;msgbox, %decir_contra_final%
+return
 
 
 
@@ -1891,19 +3306,139 @@ return
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;------------------------------------------------------------------------------------------------------------
+;---------rutinas finales------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+ganamos:
+SB_SetText("bien, chabon, bien", 2)
+d.SetRate(-0)
+d.SetPitch(-5)
+d.SpeakWait("this was a triumph, i'm making a note here.. HUGE SUCCESS")
+sleep 1000
+return
 
 
 
 exploto:
+SB_SetText("te cagaste muriendo, viejo", 2)
+;Oh good that's still working - Oh good.  My slow clap processor made it into this thing. So we have that.
+
 d.SetRate(-2)
 d.SetPitch(-5)
-d.SpeakWait("this was a triumph, i'm making a note here.. HUGE SUCCESS")
+
+SoundPlay, %A_ScriptDir%\Slow clap.wav
+sleep 700
+d.SpeakWait("Oh good.  My slow clap processor its still working. So we have that.")
 sleep 500
+d.Speakwait("i hope you are proud of yourself")
+sleep 500
+d.Speak("congratulations")
+SoundPlay, %A_ScriptDir%\Slow clap.wav
+sleep 5000
 return
+
+
+;------------------------------------------------------------------------------------------------------------
+;---------rutina status--------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+status:
+SB_SetText(Texto, 2)
+	d.SetRate(-6)
+	status = batteries %baterias% - digit %digito% -- vocal %vocal% -- car %car% -- freak %frk% -- parallel port %paralelo%
+	d.SpeakWait(status)
+	gosub, bip
+	d.SetRate(-2)
+return
+
+;------------------------------------------------------------------------------------------------------------
+;---------rutina cerrar--------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+cerrar:
+	SB_SetText("cerrar", 2)
+	d.SetRate(-5)
+	d.SpeakWait("goodbye")
+	gosub, bip
+	ExitApp
+return
+
+
+;------------------------------------------------------------------------------------------------------------
+;---------rutina bip-----------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
 
 bip:
 SoundBeep, 2000, 50
 return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2103,14 +3638,6 @@ TrayTip, Speech Recognition, You said: %Text%
 ;Sleep, 3000
 return
 
-
-j::
-s.SetRate(-2)
-s.SetPitch(0)
-s.SetVolume(100)
-s.SpeakWait("Reading rate minus two and volume 100 and pitch 0")
-return
-*/
 
 j::
 s.SetRate(-2)
