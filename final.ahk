@@ -66,13 +66,6 @@ ExitApp
 r::
 Reload
 
-c::
-gosub, pedirnumero
-memoria1 := numerofinal
-msgbox, %memoria1%
-return
-
-
 iniciar:
 
 
@@ -83,7 +76,7 @@ SB_SetText("escuchando", 2)
 d.Speak("ready")
 gosub, bip
 
-e.Recognize(["chequear bomba", "status", "chau", "cables", "boton", "simbolos", "rojo", "azul", "verde", "amarillo", "quien", "la bomba exploto", "memorias", "ganamos", "secuencia", "complicados", "contraseña", "repetir contraseña"])
+e.Recognize(["chequear bomba", "status", "chau", "cables", "boton", "simbolos", "rojo", "azul", "verde", "amarillo", "quien", "la bomba exploto", "memorias", "ganamos", "secuencia", "complicados", "contraseña", "repetir contraseña", "morse"])
 Texto := e.Prompt()
 ;TrayTip, reconocimiento, %Texto%
 ;sleep 1000
@@ -163,6 +156,11 @@ else if (Texto = "repetir contraseña")
 	;TrayTip, reconocimiento, repetir contraseña
 	gosub, contar_pass_final
 	}
+else if (Texto = "morse")
+	{
+	;TrayTip, reconocimiento, codigo morse
+	gosub, morse
+	}
 }
 return
 
@@ -172,7 +170,8 @@ chequear:
 SB_SetText(Texto, 2)
 d.SetRate(0)
 d.SetPitch(0)
-d.SpeakWait("check bomb")
+;d.SpeakWait("check bomb")
+d.Speak("check bomb")
 gosub, bip
 d.SetRate(-1)
 loop{
@@ -2016,6 +2015,14 @@ memoria:
 
 if procesadouno = 0
 	{
+	memorias_pos_1 := 0
+	memorias_val_1 := 0
+	memorias_pos_2 := 0
+	memorias_val_2 := 0
+	memorias_pos_3 := 0
+	memorias_val_3 := 0
+	memorias_pos_4 := 0
+	memorias_val_5 := 0
 	gosub, procesaruno
 	return
 	}
@@ -2046,6 +2053,14 @@ else
 	procesadotres = 0
 	procesadocuatro = 0
 	procesadocinco = 0
+	memorias_pos_1 := 0
+	memorias_val_1 := 0
+	memorias_pos_2 := 0
+	memorias_val_2 := 0
+	memorias_pos_3 := 0
+	memorias_val_3 := 0
+	memorias_pos_4 := 0
+	memorias_val_5 := 0
 	gosub, memoria
 	}
 
@@ -2057,60 +2072,57 @@ procesaruno:
 d.SetRate(-2)
 SB_SetText("memorias, secuencia 1", 2)
 d.SpeakWait("sequence 1")
+gosub, bip
 
-gosub, pedirnumero
-
-if (numerook = 1)
-	{
-	memoria1 := numerofinal
-	vai := SubStr(memoria1, 1 , 1)
-	va1 := SubStr(memoria1, 2 , 1)
-	va2 := SubStr(memoria1, 3 , 1)
-	va3 := SubStr(memoria1, 4 , 1)
-	va4 := SubStr(memoria1, 5 , 1)
-	}
-else
-	{
-	return
-	}
-
-
-;MsgBox %memoria1% - %vai% - %va1% - %va2% - %va3% - %va4%
-SB_SetText(memoria1, 2)
-
-if vai = 1
-	{
-		;si es 1 presionar segunda posicion
-		posiciones.Insert("num1", {pos:2,valor:va2})
-		presionar_memoria = %va2%
-	}
-else if vai = 2
-	{
-		;si es 2 presionar segunda posicion
-		posiciones.Insert("num1", {pos:2,valor:va2})
-		presionar_memoria = %va2%
-	}
-else if vai = 3
-	{
-		;si es 3 presionar segunda posicion
-		posiciones.Insert("num1", {pos:3,valor:va3})
-		presionar_memoria = %va3%
-	}
-else if vai = 4
-	{
-		;si es 4 presionar cuarta posicion
-		posiciones.Insert("num1", {pos:4,valor:va4})
-		presionar_memoria = %va4%
-	}
-
-;prueba = num1
-;valor := posiciones[prueba].valor
-;posicion := posiciones[prueba].pos
-;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
-
-;msgbox, memoria numero 1: %presionar_memoria%
+e.Recognize(["1", "2", "3", "4"])
+memorias_numero1 := e.Prompt()
+;memorias_numero1 = (escuchar numero 1)
 d.SetRate(-4)
-d.SpeakWait(presionar_memoria)
+
+if memorias_numero1 = 1
+{
+	;si es 1, presionar segunda posicion
+	SB_SetText("presionar segunda posicion, valor?", 2)
+	memorias_pos_1 := 2
+	d.Speak("position second, value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_1 := value
+}
+else if memorias_numero1 = 2
+{
+	;si es 2, presionar segunda posicion
+	SB_SetText("presionar segunda posicion, valor?", 2)
+	memorias_pos_1 := 2
+	d.Speak("position second, value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_1 := value
+}
+else if memorias_numero1 = 3
+{
+	;si es 3, presionar tercera posicion
+	SB_SetText("presionar tercera posicion, valor?", 2)
+	memorias_pos_1 := 3
+	d.Speak("position third, value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_1 := value
+}
+else if memorias_numero1 = 4
+{
+	;si es 4, presionar cuarta posicion
+	SB_SetText("presionar cuarta posicion, valor?", 2)
+	memorias_pos_1 := 4
+	d.Speak("position fourth, value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_1 := value
+}
 
 procesadouno = 1
 return
@@ -2120,71 +2132,56 @@ procesardos:
 d.SetRate(-2)
 SB_SetText("memorias, secuencia 2", 2)
 d.SpeakWait("sequence 2")
-
-gosub, pedirnumero
-
-if numerook = 1
-	{
-	memoria2 := numerofinal
-	vbi := SubStr(memoria2, 1 , 1)
-	vb1 := SubStr(memoria2, 2 , 1)
-	vb2 := SubStr(memoria2, 3 , 1)
-	vb3 := SubStr(memoria2, 4 , 1)
-	vb4 := SubStr(memoria2, 5 , 1)
-	}
-else
-	{
-	return
-	}
-
-SB_SetText(memoria2, 2)
-;MsgBox %memoria2% - %vbi% - %vb1% - %vb2% - %vb3% - %vb4%
-
-if vbi = 1
-	{
-		;si es 1 presionar el que dice 4
-		if vb1 = 4
-			pos_temp = 1
-		else if vb2 = 4
-			pos_temp = 2
-		else if vb3 = 4
-			pos_temp = 3
-		else if vb4 = 4
-			pos_temp = 4
-		posiciones.Insert("num2", {pos:pos_temp,valor:4})
-		presionar_memoria = 4
-	}
-else if vbi = 2
-	{
-		;si es 2 presionar misma posicion que num1
-		pos_temp := posiciones["num1"].pos
-		val_temp := vb%pos_temp%		
-		posiciones.Insert("num2", {pos:pos_temp,valor:val_temp})
-		presionar_memoria = %val_temp%
-	}
-else if vbi = 3
-	{
-		;si es 3 presionar primera posicion
-		posiciones.Insert("num2", {pos:1,valor:vb1})
-		presionar_memoria = %vb1%
-	}
-else if vbi = 4
-	{
-		;si es 4 presionar misma posicion que num1
-		pos_temp := posiciones["num1"].pos
-		val_temp := vb%pos_temp%
-		posiciones.Insert("num2", {pos:pos_temp,valor:val_temp})
-		presionar_memoria = %val_temp%
-	}
-
-;prueba = num2
-;valor := posiciones[prueba].valor
-;posicion := posiciones[prueba].pos
-;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
-
-;msgbox, memoria numero 2: %presionar_memoria%
 d.SetRate(-4)
-d.SpeakWait(presionar_memoria)
+gosub, bip
+e.Recognize(["1", "2", "3", "4"])
+memorias_numero2 := e.Prompt()
+;memorias_numero2 = (escuchar numero 2)
+
+if memorias_numero2 = 1
+{
+	;si es 1, presionar valor 4
+	SB_SetText("presionar 4, posicion?", 2)
+	memorias_val_2 = 4
+	d.Speak("value four, position")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	position := e.Prompt()
+	memorias_pos_2 := position
+}
+else if memorias_numero2 = 2
+{
+	;si es 2, presionar misma posicion que en secuencia 1
+	SB_SetText("presionar posicion " memorias_pos_1 ", valor?", 2)
+	memorias_pos_2 := memorias_pos_1
+	d.Speak("position " memorias_pos_1 ", value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_2 := value
+}
+else if memorias_numero2 = 3
+{
+	;si es 3, presionar primera posicion
+	SB_SetText("presionar primera posicion, valor?", 2)
+	memorias_pos_2 = 1
+	d.Speak("position one, value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_2 := value
+}
+else if memorias_numero2 = 4
+{
+	;si es 4, presionar misma posicion que en secuencia 1
+	SB_SetText("presionar posicion " memorias_pos_1 ", valor?", 2)
+	memorias_pos_2 := memorias_pos_1
+	d.Speak("position " memorias_pos_1 ", value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_2 := value
+}
 
 procesadodos = 1
 return
@@ -2194,83 +2191,56 @@ porcesartres:
 d.SetRate(-2)
 SB_SetText("memorias, secuencia 3", 2)
 d.SpeakWait("sequence 3")
-
-gosub, pedirnumero
-
-if numerook = 1
-	{
-	memoria3 := numerofinal
-	vci := SubStr(memoria3, 1 , 1)
-	vc1 := SubStr(memoria3, 2 , 1)
-	vc2 := SubStr(memoria3, 3 , 1)
-	vc3 := SubStr(memoria3, 4 , 1)
-	vc4 := SubStr(memoria3, 5 , 1)
-	}
-else
-	{
-	return
-	}
-
-;MsgBox %memoria3% - %vai% - %va1% - %va2% - %va3% - %va4%
-SB_SetText(memoria3, 2)
-if vci = 1
-	{
-		;si es 1 presionar el mismo valor de num2
-		val_temp := posiciones["num2"].valor
-		if (val_temp = vc1)
-			pos_temp = 1
-		else if (val_temp = vc2)
-			pos_temp = 2
-		else if (val_temp = vc3)
-			pos_temp = 3
-		else if (val_temp = vc4)
-			pos_temp = 4
-		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
-		presionar_memoria = %val_temp%
-	}
-else if vci = 2
-	{
-		;si es 2 presionar el mismo valor de num1
-		val_temp := posiciones["num1"].valor
-		if (val_temp = vc1)
-			pos_temp = 1
-		else if (val_temp = vc2)
-			pos_temp = 2
-		else if (val_temp = vc3)
-			pos_temp = 3
-		else if (val_temp = vc4)
-			pos_temp = 4
-		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
-		presionar_memoria = %val_temp%
-	}
-else if vci = 3
-	{
-		;si es 3 presionar tercera posicion
-		posiciones.Insert("num3", {pos:3,valor:vc3})
-		presionar_memoria = %vc3%
-	}
-else if vci = 4
-	{
-		;si es 4 presionar valor 4
-		if vc1 = 4
-			pos_temp = 1
-		else if vc2 = 4
-			pos_temp = 2
-		else if vc3 = 4
-			pos_temp = 3
-		else if vc4 = 4
-			pos_temp = 4
-		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
-		presionar_memoria = %val_temp%
-	}
-
-;prueba = num3
-;valor := posiciones[prueba].valor
-;posicion := posiciones[prueba].pos
-;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
-;msgbox, memoria numero 3: %presionar_memoria%
 d.SetRate(-4)
-d.SpeakWait(presionar_memoria)
+gosub, bip
+e.Recognize(["1", "2", "3", "4"])
+memorias_numero3 := e.Prompt()
+;memorias_numero3 = (escuchar numero 3)
+
+if memorias_numero3 = 1
+{
+	;si es 1, presionar mismo valor que en stage 2
+	SB_SetText("presionar valor " memorias_val_2 ", posicion?", 2)
+	memorias_val_3 := memorias_val_2
+	d.Speak("value " memorias_val_2 ", position")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	position := e.Prompt()
+	memorias_pos_3 := position
+}
+else if memorias_numero3 = 2
+{
+	;si es 2, presionar mismo valor que en stage 1
+	SB_SetText("presionar valor " memorias_val_1 ", posicion?", 2)
+	memorias_val_3 := memorias_val_1
+	d.Speak("value " memorias_val_1 ", position")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	position := e.Prompt()
+	memorias_pos_3 := position
+}
+else if memorias_numero3 = 3
+{
+	;si es 3, presionar tercera posicion
+	SB_SetText("presionar tercera posicion, valor?", 2)
+	memorias_pos_3 = 3
+	d.Speak("position third, value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_3 := value
+}
+else if memorias_numero3 = 4
+{
+	;si es 4, presionar valor 4
+	SB_SetText("presionar 4, posicion?", 2)
+	memorias_val_3 = 4
+	d.Speak("value 4, position")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	position := e.Prompt()
+	memorias_pos_3 := position
+}
 
 procesadotres = 1
 return
@@ -2280,64 +2250,56 @@ procesarcuatro:
 d.SetRate(-2)
 SB_SetText("memorias, secuencia 4", 2)
 d.SpeakWait("sequence 4")
-
-gosub, pedirnumero
-
-if numerook = 1
-	{
-	memoria4 := numerofinal
-	vdi := SubStr(memoria4, 1 , 1)
-	vd1 := SubStr(memoria4, 2 , 1)
-	vd2 := SubStr(memoria4, 3 , 1)
-	vd3 := SubStr(memoria4, 4 , 1)
-	vd4 := SubStr(memoria4, 5 , 1)
-	}
-else
-	{
-	return
-	}
-
-;MsgBox %memoria4% - %vai% - %va1% - %va2% - %va3% - %va4%
-SB_SetText(memoria4, 2)
-if vdi = 1
-	{
-		;si es 1 presionar la misma posicion en num1
-		pos_temp := posiciones["num1"].pos
-		val_temp := vd%pos_temp%		
-		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
-		presionar_memoria = %val_temp%
-	}
-else if vdi = 2
-	{
-		;si es 2 presionar en la posicion 1
-		posiciones.Insert("num4", {pos:1,valor:vd1})
-		presionar_memoria = %vd1%
-	}
-else if vdi = 3
-	{
-		;si es 3 presionar misma posicion en num2
-		pos_temp := posiciones["num2"].pos
-		val_temp := vd%pos_temp%		
-		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
-		presionar_memoria = %val_temp%
-	}
-else if vdi = 4
-	{
-		;si es 4 presionar misma posicion en num2
-		pos_temp := posiciones["num2"].pos
-		val_temp := vd%pos_temp%		
-		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
-		presionar_memoria = %val_temp%
-	}
-
-;prueba = num4
-;valor := posiciones[prueba].valor
-;posicion := posiciones[prueba].pos
-;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
-
-;msgbox, memoria numero 4: %presionar_memoria%
 d.SetRate(-4)
-d.SpeakWait(presionar_memoria)
+gosub, bip
+e.Recognize(["1", "2", "3", "4"])
+memorias_numero4 := e.Prompt()
+;memorias_numero4 = (escuchar numero 4)
+
+if memorias_numero4 = 1
+{
+	;si es 1, presionar misma posicion que secuencia 1
+	SB_SetText("presionar posicion " memorias_pos_1 ", valor?", 2)
+	memorias_pos_4 := memorias_pos_1
+	d.Speak("position " memorias_pos_1 ", value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_4 := value
+}
+else if memorias_numero4 = 2
+{
+	;si es 2, presionar primera posicion
+	SB_SetText("presionar primera posicion, valor?", 2)
+	memorias_pos_4 = 1
+	d.Speak("position first, value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_4 := value
+}
+else if memorias_numero4 = 3
+{
+	;si es 3, presionar misma posicion que secuencia 2
+	SB_SetText("presionar posicion " memorias_pos_2 ", valor?", 2)
+	memorias_pos_4 := memorias_pos_2
+	d.Speak("position " memorias_pos_2 ", value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_4 := value
+}
+else if memorias_numero4 = 4
+{
+	;si es 4, presionar misma posicion que secuencia 2
+	SB_SetText("presionar posicion " memorias_pos_2 ", valor?", 2)
+	memorias_pos_4 := memorias_pos_2
+	d.Speak("position " memorias_pos_2 ", value")
+	gosub, bip
+	e.Recognize(["1", "2", "3", "4"])
+	value := e.Prompt()
+	memorias_val_4 := value
+}
 
 procesadocuatro = 1
 return
@@ -2347,123 +2309,42 @@ procesarcinco:
 d.SetRate(-2)
 SB_SetText("memorias, secuencia 5", 2)
 d.SpeakWait("sequence 5")
-
-gosub, pedirnumero
-
-if numerook = 1
-	{
-	memoria5 := numerofinal
-	vei := SubStr(memoria5, 1 , 1)
-	ve1 := SubStr(memoria5, 2 , 1)
-	ve2 := SubStr(memoria5, 3 , 1)
-	ve3 := SubStr(memoria5, 4 , 1)
-	ve4 := SubStr(memoria5, 5 , 1)
-	}
-else
-	{
-	return
-	}
-
-;MsgBox %memoria5% - %vai% - %va1% - %va2% - %va3% - %va4%
-SB_SetText(memoria5, 2)
-if vei = 1
-	{
-	;si es 1 mismo valor que num1
-	val_temp := posiciones["num1"].valor
-	presionar_memoria = %val_temp%
-	}
-else if vei = 2
-	{
-	;si es 2 mismo valor que num2
-	val_temp := posiciones["num2"].valor
-	presionar_memoria = %val_temp%
-	}
-else if vei = 3
-	{
-	;si es 3 mismo valor que num4
-	val_temp := posiciones["num4"].valor
-	presionar_memoria = %val_temp%
-	}
-else if vei = 4
-	{
-	;si es 4 mismo valor que nume3
-	val_temp := posiciones["num3"].valor
-	presionar_memoria = %val_temp%
-	}
-
-;msgbox, memoria numero5: %presionar_memoria%
-
 d.SetRate(-4)
-d.SpeakWait(presionar_memoria)
+gosub, bip
+e.Recognize(["1", "2", "3", "4"])
+memorias_numero5 := e.Prompt()
+;memorias_numero5 = (escuchar numero 5)
+
+if memorias_numero5 = 1
+{
+	;si es 1, mismo valor que en stage 1
+	SB_SetText("presionar valor " memorias_val_1, 2)
+	d.Speak("press " memorias_val_1)
+	gosub, bip
+}
+else if memorias_numero5 = 2
+{
+	;si es 2, mismo valor que en stage 2
+	SB_SetText("presionar valor " memorias_val_2, 2)
+	d.Speak("press " memorias_val_2)
+	gosub, bip
+}
+else if memorias_numero5 = 3
+{
+	;si es 3, mismo valor que en stage 4
+	SB_SetText("presionar valor " memorias_val_4, 2)
+	d.Speak("press " memorias_val_4)
+	gosub, bip
+}
+else if memorias_numero5 = 4
+{
+	;si es 4, mismo valor que en stage 3
+	SB_SetText("presionar valor " memorias_val_3, 2)
+	d.Speak("press " memorias_val_3)
+	gosub, bip
+}
 
 procesadocinco = 1
-return
-
-
-
-pedirnumero:
-;--------------------------------------------rutina de pedir numero
-numerook = 0
-
-;pedir numero1
-gosub, bip
-e.Recognize(["1", "2", "3", "4", "salir"])
-numero1 := e.Prompt()
-if (numero1 = "salir")
-	{
-	return
-	}
-
-SB_SetText("1: "numero1, 2)
-gosub, bip
-
-;pedir numero2
-e.Recognize(["1", "2", "3", "4", "salir"])
-numero2 := e.Prompt()
-if (numero2 = "salir")
-	{
-	return
-	}
-
-SB_SetText("2: "numero2, 2)
-gosub, bip
-
-;pedir numero3
-e.Recognize(["1", "2", "3", "4", "salir"])
-numero3 := e.Prompt()
-if (numero3 = "salir")
-	{
-	return
-	}
-
-SB_SetText("3: "numero3, 2)
-gosub, bip
-
-;pedir numero4
-e.Recognize(["1", "2", "3", "4", "salir"])
-numero4 := e.Prompt()
-if (numero4 = "salir")
-	{
-	return
-	}
-
-SB_SetText("4: "numero4, 2)
-gosub, bip
-
-;pedir numero5
-e.Recognize(["1", "2", "3", "4", "salir"])
-numero5 := e.Prompt()
-if (numero5 = "salir")
-	{
-	return
-	}
-
-SB_SetText("5: "numero5, 2)
-gosub, bip
-
-numerofinal := numero1 numero2 numero3 numero4 numero5
-numerook = 1
-
 return
 
 
@@ -3292,7 +3173,65 @@ return
 
 
 
+;------------------------------------------------------------------------------------------------------------
+;---------rutina morse---------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
 
+
+morse:
+SB_SetText("codigo morse", 2)
+d.SpeakWait("morse code")
+SoundBeep, 2000, 50
+
+e.Recognize(["raya punto punto punto pausa punto pausa punto raya pausa", "raya punto punto punto pausa punto punto pausa punto punto punto pausa", "raya punto punto punto pausa raya raya raya pausa raya raya pausa", "raya punto punto punto pausa raya raya raya pausa raya punto punto raya pausa", "raya punto punto punto pausa punto raya punto pausa punto pausa", "raya punto punto punto pausa punto raya punto pausa punto punto pausa", "punto punto raya punto pausa punto raya punto punto pausa punto punto pausa", "punto punto punto punto pausa punto raya pausa punto raya punto punto pausa", "punto raya punto punto pausa punto pausa punto raya pausa", "punto punto punto pausa punto punto punto punto pausa punto pausa", "punto punto punto pausa punto raya punto punto pausa punto punto pausa", "punto punto punto pausa raya pausa punto pausa", "punto punto punto pausa raya pausa punto punto pausa", "punto punto punto pausa raya pausa punto raya punto pausa", "raya pausa punto raya punto pausa punto punto pausa", "punto punto punto raya pausa punto pausa raya punto raya punto pausa"])
+Texto := e.Prompt()
+
+;msgbox, %Texto%
+
+
+
+if (Texto = "raya punto punto punto pausa punto pausa punto raya pausa")
+	Texto = beats 3.600
+else if (Texto = "raya punto punto punto pausa punto punto pausa punto punto punto pausa")
+	Texto = bistro 3.552
+else if (Texto = "raya punto punto punto pausa raya raya raya pausa raya raya pausa")
+	Texto = bombs 3.565
+else if (Texto = "raya punto punto punto pausa raya raya raya pausa raya punto punto raya pausa")
+	Texto = boxes 3.535
+else if (Texto = "raya punto punto punto pausa punto raya punto pausa punto pausa")
+	Texto = break 3.572
+else if (Texto = "raya punto punto punto pausa punto raya punto pausa punto punto pausa")
+	Texto = brick 3.575
+else if (Texto = "punto punto raya punto pausa punto raya punto punto pausa punto punto pausa")
+	Texto = flick 3.555
+else if (Texto = "punto punto punto punto pausa punto raya pausa punto raya punto punto pausa")
+	Texto = halls 3.515
+else if (Texto = "punto raya punto punto pausa punto pausa punto raya pausa")
+	Texto = leaks 3.542
+else if (Texto = "punto punto punto pausa punto punto punto punto pausa punto pausa")
+	Texto = shell 3.505
+else if (Texto = "punto punto punto pausa punto raya punto punto pausa punto punto pausa")
+	Texto = slick 3.522
+else if (Texto = "punto punto punto pausa raya pausa punto pausa")
+	Texto = steak 3.582
+else if (Texto = "punto punto punto pausa raya pausa punto punto pausa")
+	Texto = sting 3.592
+else if (Texto = "punto punto punto pausa raya pausa punto raya punto pausa")
+	Texto = strobe 3.545
+else if (Texto = "raya pausa punto raya punto pausa punto punto pausa")
+	Texto = trick 3.532
+else if (Texto = "punto punto punto raya pausa punto pausa raya punto raya punto pausa")
+	Texto = vector 3.595
+
+
+SB_SetText(Texto, 2)
+d.SetRate(-2)
+d.SpeakWait(Texto)
+
+SoundBeep, 2000, 50
+
+sleep 3000
+return
 
 
 
@@ -3524,6 +3463,428 @@ return
 --------------------------------------------------
 --------------------------------------------------
 comentado
+
+viejas memorias
+
+procesaruno:
+;--------------------------------------------rutina de pedir memoria1
+;rutina de decir memoria1
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 1", 2)
+d.SpeakWait("sequence 1")
+
+gosub, pedirnumero
+
+if (numerook = 1)
+	{
+	memoria1 := numerofinal
+	vai := SubStr(memoria1, 1 , 1)
+	va1 := SubStr(memoria1, 2 , 1)
+	va2 := SubStr(memoria1, 3 , 1)
+	va3 := SubStr(memoria1, 4 , 1)
+	va4 := SubStr(memoria1, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+
+;MsgBox %memoria1% - %vai% - %va1% - %va2% - %va3% - %va4%
+SB_SetText(memoria1, 2)
+
+if vai = 1
+	{
+		;si es 1 presionar segunda posicion
+		posiciones.Insert("num1", {pos:2,valor:va2})
+		presionar_memoria = %va2%
+	}
+else if vai = 2
+	{
+		;si es 2 presionar segunda posicion
+		posiciones.Insert("num1", {pos:2,valor:va2})
+		presionar_memoria = %va2%
+	}
+else if vai = 3
+	{
+		;si es 3 presionar segunda posicion
+		posiciones.Insert("num1", {pos:3,valor:va3})
+		presionar_memoria = %va3%
+	}
+else if vai = 4
+	{
+		;si es 4 presionar cuarta posicion
+		posiciones.Insert("num1", {pos:4,valor:va4})
+		presionar_memoria = %va4%
+	}
+
+;prueba = num1
+;valor := posiciones[prueba].valor
+;posicion := posiciones[prueba].pos
+;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
+
+;msgbox, memoria numero 1: %presionar_memoria%
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadouno = 1
+return
+
+procesardos:
+;--------------------------------------------rutina de pedir memoria2
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 2", 2)
+d.SpeakWait("sequence 2")
+
+gosub, pedirnumero
+
+if numerook = 1
+	{
+	memoria2 := numerofinal
+	vbi := SubStr(memoria2, 1 , 1)
+	vb1 := SubStr(memoria2, 2 , 1)
+	vb2 := SubStr(memoria2, 3 , 1)
+	vb3 := SubStr(memoria2, 4 , 1)
+	vb4 := SubStr(memoria2, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+SB_SetText(memoria2, 2)
+;MsgBox %memoria2% - %vbi% - %vb1% - %vb2% - %vb3% - %vb4%
+
+if vbi = 1
+	{
+		;si es 1 presionar el que dice 4
+		if vb1 = 4
+			pos_temp = 1
+		else if vb2 = 4
+			pos_temp = 2
+		else if vb3 = 4
+			pos_temp = 3
+		else if vb4 = 4
+			pos_temp = 4
+		posiciones.Insert("num2", {pos:pos_temp,valor:4})
+		presionar_memoria = 4
+	}
+else if vbi = 2
+	{
+		;si es 2 presionar misma posicion que num1
+		pos_temp := posiciones["num1"].pos
+		val_temp := vb%pos_temp%		
+		posiciones.Insert("num2", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vbi = 3
+	{
+		;si es 3 presionar primera posicion
+		posiciones.Insert("num2", {pos:1,valor:vb1})
+		presionar_memoria = %vb1%
+	}
+else if vbi = 4
+	{
+		;si es 4 presionar misma posicion que num1
+		pos_temp := posiciones["num1"].pos
+		val_temp := vb%pos_temp%
+		posiciones.Insert("num2", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+
+;prueba = num2
+;valor := posiciones[prueba].valor
+;posicion := posiciones[prueba].pos
+;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
+
+;msgbox, memoria numero 2: %presionar_memoria%
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadodos = 1
+return
+
+porcesartres:
+;--------------------------------------------rutina de pedir memoria3
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 3", 2)
+d.SpeakWait("sequence 3")
+
+gosub, pedirnumero
+
+if numerook = 1
+	{
+	memoria3 := numerofinal
+	vci := SubStr(memoria3, 1 , 1)
+	vc1 := SubStr(memoria3, 2 , 1)
+	vc2 := SubStr(memoria3, 3 , 1)
+	vc3 := SubStr(memoria3, 4 , 1)
+	vc4 := SubStr(memoria3, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+;MsgBox %memoria3% - %vai% - %va1% - %va2% - %va3% - %va4%
+SB_SetText(memoria3, 2)
+if vci = 1
+	{
+		;si es 1 presionar el mismo valor de num2
+		val_temp := posiciones["num2"].valor
+		if (val_temp = vc1)
+			pos_temp = 1
+		else if (val_temp = vc2)
+			pos_temp = 2
+		else if (val_temp = vc3)
+			pos_temp = 3
+		else if (val_temp = vc4)
+			pos_temp = 4
+		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vci = 2
+	{
+		;si es 2 presionar el mismo valor de num1
+		val_temp := posiciones["num1"].valor
+		if (val_temp = vc1)
+			pos_temp = 1
+		else if (val_temp = vc2)
+			pos_temp = 2
+		else if (val_temp = vc3)
+			pos_temp = 3
+		else if (val_temp = vc4)
+			pos_temp = 4
+		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vci = 3
+	{
+		;si es 3 presionar tercera posicion
+		posiciones.Insert("num3", {pos:3,valor:vc3})
+		presionar_memoria = %vc3%
+	}
+else if vci = 4
+	{
+		;si es 4 presionar valor 4
+		if vc1 = 4
+			pos_temp = 1
+		else if vc2 = 4
+			pos_temp = 2
+		else if vc3 = 4
+			pos_temp = 3
+		else if vc4 = 4
+			pos_temp = 4
+		posiciones.Insert("num3", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+
+;prueba = num3
+;valor := posiciones[prueba].valor
+;posicion := posiciones[prueba].pos
+;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
+;msgbox, memoria numero 3: %presionar_memoria%
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadotres = 1
+return
+
+procesarcuatro:
+;--------------------------------------------rutina de pedir memoria4
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 4", 2)
+d.SpeakWait("sequence 4")
+
+gosub, pedirnumero
+
+if numerook = 1
+	{
+	memoria4 := numerofinal
+	vdi := SubStr(memoria4, 1 , 1)
+	vd1 := SubStr(memoria4, 2 , 1)
+	vd2 := SubStr(memoria4, 3 , 1)
+	vd3 := SubStr(memoria4, 4 , 1)
+	vd4 := SubStr(memoria4, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+;MsgBox %memoria4% - %vai% - %va1% - %va2% - %va3% - %va4%
+SB_SetText(memoria4, 2)
+if vdi = 1
+	{
+		;si es 1 presionar la misma posicion en num1
+		pos_temp := posiciones["num1"].pos
+		val_temp := vd%pos_temp%		
+		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vdi = 2
+	{
+		;si es 2 presionar en la posicion 1
+		posiciones.Insert("num4", {pos:1,valor:vd1})
+		presionar_memoria = %vd1%
+	}
+else if vdi = 3
+	{
+		;si es 3 presionar misma posicion en num2
+		pos_temp := posiciones["num2"].pos
+		val_temp := vd%pos_temp%		
+		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+else if vdi = 4
+	{
+		;si es 4 presionar misma posicion en num2
+		pos_temp := posiciones["num2"].pos
+		val_temp := vd%pos_temp%		
+		posiciones.Insert("num4", {pos:pos_temp,valor:val_temp})
+		presionar_memoria = %val_temp%
+	}
+
+;prueba = num4
+;valor := posiciones[prueba].valor
+;posicion := posiciones[prueba].pos
+;msgbox, numero: %prueba% - pos: %posicion% - val: %valor% - presionar valor: %presionar_memoria%
+
+;msgbox, memoria numero 4: %presionar_memoria%
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadocuatro = 1
+return
+
+procesarcinco:
+;--------------------------------------------rutina de pedir memoria5
+d.SetRate(-2)
+SB_SetText("memorias, secuencia 5", 2)
+d.SpeakWait("sequence 5")
+
+gosub, pedirnumero
+
+if numerook = 1
+	{
+	memoria5 := numerofinal
+	vei := SubStr(memoria5, 1 , 1)
+	ve1 := SubStr(memoria5, 2 , 1)
+	ve2 := SubStr(memoria5, 3 , 1)
+	ve3 := SubStr(memoria5, 4 , 1)
+	ve4 := SubStr(memoria5, 5 , 1)
+	}
+else
+	{
+	return
+	}
+
+;MsgBox %memoria5% - %vai% - %va1% - %va2% - %va3% - %va4%
+SB_SetText(memoria5, 2)
+if vei = 1
+	{
+	;si es 1 mismo valor que num1
+	val_temp := posiciones["num1"].valor
+	presionar_memoria = %val_temp%
+	}
+else if vei = 2
+	{
+	;si es 2 mismo valor que num2
+	val_temp := posiciones["num2"].valor
+	presionar_memoria = %val_temp%
+	}
+else if vei = 3
+	{
+	;si es 3 mismo valor que num4
+	val_temp := posiciones["num4"].valor
+	presionar_memoria = %val_temp%
+	}
+else if vei = 4
+	{
+	;si es 4 mismo valor que nume3
+	val_temp := posiciones["num3"].valor
+	presionar_memoria = %val_temp%
+	}
+
+;msgbox, memoria numero5: %presionar_memoria%
+
+d.SetRate(-4)
+d.SpeakWait(presionar_memoria)
+
+procesadocinco = 1
+return
+
+
+
+pedirnumero:
+;--------------------------------------------rutina de pedir numero
+numerook = 0
+
+;pedir numero1
+gosub, bip
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero1 := e.Prompt()
+if (numero1 = "salir")
+	{
+	return
+	}
+
+SB_SetText("1: "numero1, 2)
+gosub, bip
+
+;pedir numero2
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero2 := e.Prompt()
+if (numero2 = "salir")
+	{
+	return
+	}
+
+SB_SetText("2: "numero2, 2)
+gosub, bip
+
+;pedir numero3
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero3 := e.Prompt()
+if (numero3 = "salir")
+	{
+	return
+	}
+
+SB_SetText("3: "numero3, 2)
+gosub, bip
+
+;pedir numero4
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero4 := e.Prompt()
+if (numero4 = "salir")
+	{
+	return
+	}
+
+SB_SetText("4: "numero4, 2)
+gosub, bip
+
+;pedir numero5
+e.Recognize(["1", "2", "3", "4", "salir"])
+numero5 := e.Prompt()
+if (numero5 = "salir")
+	{
+	return
+	}
+
+SB_SetText("5: "numero5, 2)
+gosub, bip
+
+numerofinal := numero1 numero2 numero3 numero4 numero5
+numerook = 1
+
+return
+
+-----------------------------
+-----------------------------
+-----------------------------
+
 
 chequeo inestable
 
