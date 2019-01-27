@@ -76,7 +76,7 @@ SB_SetText("escuchando", 2)
 d.Speak("ready")
 gosub, bip
 
-e.Recognize(["chequear bomba", "status", "chau", "cables", "boton", "simbolos", "rojo", "azul", "verde", "amarillo", "quien", "la bomba exploto", "memorias", "ganamos", "secuencia", "complicados", "contraseña", "repetir contraseña", "morse"])
+e.Recognize(["chequear bomba", "status", "chau", "cables", "boton", "simbolos", "rojo", "azul", "verde", "amarillo", "quien", "la bomba exploto", "memorias", "ganamos", "secuencia", "complicados", "contraseña", "repetir contraseña", "morse", "laberinto"])
 Texto := e.Prompt()
 ;TrayTip, reconocimiento, %Texto%
 ;sleep 1000
@@ -161,6 +161,11 @@ else if (Texto = "morse")
 	;TrayTip, reconocimiento, codigo morse
 	gosub, morse
 	}
+else if (Texto = "laberinto")
+	{
+	;TrayTip, reconocimiento, codigo morse
+	gosub, laberinto
+	}
 }
 return
 
@@ -171,7 +176,7 @@ SB_SetText(Texto, 2)
 d.SetRate(0)
 d.SetPitch(0)
 ;d.SpeakWait("check bomb")
-d.Speak("check bomb")
+d.SpeakWait("check bomb")
 gosub, bip
 d.SetRate(-1)
 loop{
@@ -404,7 +409,7 @@ cable_6 = ""
 d.SetRate(0)
 d.SetPitch(0)
 ;d.SpeakWait("cables")
-d.Speak("cables")
+d.SpeakWait("cables")
 gosub, bip
 d.SetRate(-1)
 loop{
@@ -3235,6 +3240,681 @@ return
 
 
 
+;------------------------------------------------------------------------------------------------------------
+;---------rutina laberinto-----------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------
+
+
+
+laberinto:
+;seteo la variable vacia, mucho muy importante
+laberinto := {}
+
+
+
+;pedir por laberinto arrancando con X
+SB_SetText("laberinto, primer circulo", 2)
+d.SpeakWait("maze, first circle")
+
+e.Recognize(["1", "2", "3", "4", "5", "6", "7"])
+laberinto_numerox := e.Prompt()
+SB_SetText(laberinto_numerox, 2)
+gosub, bip
+
+e.Recognize(["1", "2", "3", "4", "5", "6", "7"])
+laberinto_numeroy := e.Prompt()
+SB_SetText(laberinto_numeroy, 2)
+gosub, bip
+
+;aca pedir por laberinto_numero
+if (laberinto_numerox = 1 and laberinto_numeroy = 2)
+{
+	gosub, laberinto_1-2
+	gosub, bip
+}
+else if (laberinto_numerox = 5 and laberinto_numeroy = 2)
+{
+	gosub, laberinto_5-2
+	gosub, bip
+}
+else if (laberinto_numerox = 4 and laberinto_numeroy = 4)
+{
+	gosub, laberinto_4-4
+	gosub, bip
+}
+else if (laberinto_numerox = 1 and laberinto_numeroy = 1)
+{
+	gosub, laberinto_1-1
+	gosub, bip
+}
+else if (laberinto_numerox = 5 and laberinto_numeroy = 3)
+{
+	gosub, laberinto_5-3
+	gosub, bip
+}
+else if (laberinto_numerox = 5 and laberinto_numeroy = 1)
+{
+	gosub, laberinto_5-1
+	gosub, bip
+}
+else if (laberinto_numerox = 2 and laberinto_numeroy = 1)
+{
+	gosub, laberinto_2-1
+	gosub, bip
+}
+else if (laberinto_numerox = 4 and laberinto_numeroy = 1)
+{
+	gosub, laberinto_4-1
+	gosub, bip
+}
+else if (laberinto_numerox = 3 and laberinto_numeroy = 2)
+{
+	gosub, laberinto_3-2
+	gosub, bip
+}
+
+;a esa altura ya esta cargado el laberinto
+;vamos a suponer que es el laberinto_5-2
+;gosub, laberinto_5-2
+;gosub, bip
+
+;--------------------------------------
+;-restos del dibujo de la hermosa grid-
+;--------------------------------------
+/*
+alto := 6
+ancho := 6
+posx := 10
+posy := 10
+punteroy := 1
+punterox := 1
+
+;dibujo mi hermosa grid de 13 x 13
+loop, 13
+{
+	
+	Loop, 13
+	{
+		if (laberinto["y_"punteroy]["x_"punterox] = "p")
+		{
+			Gui, Add, Progress,x%posx% y%posy% w%ancho% h%alto% cBlack vx_%punterox%y_%punteroy%, 100
+		}
+		else
+		{
+			Gui, Add, Progress,x%posx% y%posy% w%ancho% h%alto% cLime vx_%punterox%y_%punteroy%, 100
+		}
+		posx += 5
+		punterox += 1
+	}
+	posx := 10
+	punterox := 1
+	punteroy += 1
+	posy += 5
+}
+Gui,Show,w400 h400
+*/
+
+
+;pido posicion inicial y posicion final
+;cuadrado blanco
+;pido jugador arrancando con X
+SB_SetText("cuadrado blanco", 2)
+d.SpeakWait("white square")
+
+;pido iniciox
+
+e.Recognize(["1", "2", "3", "4", "5", "6", "7"])
+iniciox := e.Prompt()
+SB_SetText(iniciox, 2)
+gosub, bip
+
+;pido inicioy
+
+e.Recognize(["1", "2", "3", "4", "5", "6", "7"])
+inicioy := e.Prompt()
+SB_SetText(inicioy, 2)
+gosub, bip
+
+
+
+
+;pido meta
+;triangulo rojo
+SB_SetText("triangulo rojo", 2)
+d.SpeakWait("red triangle")
+;pido finx
+e.Recognize(["1", "2", "3", "4", "5", "6", "7"])
+finx := e.Prompt()
+SB_SetText(finx, 2)
+gosub, bip
+
+;pido finy
+e.Recognize(["1", "2", "3", "4", "5", "6", "7"])
+finy := e.Prompt()
+SB_SetText(finy, 2)
+gosub, bip
+
+
+
+
+SB_SetText("calculando...", 2)
+
+
+;la traduzco a mi grilla de 13 x 13
+iniciox := iniciox * 2
+inicioy := inicioy * 2
+finx := finx * 2
+finy := finy * 2
+
+/*
+;pinto lindos colores para que se vea kawaii, morphe se esta volviendo loco
+;mi hermosa grid
+GuiControl, +cYellow, x_%iniciox%y_%inicioy%
+GuiControl, +cRed, x_%finx%y_%finy%
+*/
+
+;seteo la posicion en inicial y limpio variables de posiciones y pasos globales
+gosub, reiniciar_posicion
+
+;inicio procesamiento del laberinto
+gosub, iniciar_proceso_laberinto
+
+;aca deberia devolver el resultado
+;gosub, decir_resultado_laberinto
+return
+
+
+
+
+iniciar_proceso_laberinto:
+llego := 0
+loop
+{
+gosub, contar_libres
+gosub, mover
+;sleep 20
+if (llego = 1)
+	{
+	gosub, procesar_pasos
+	break
+	}
+}
+return
+
+reiniciar_posicion:
+actualx := iniciox
+actualY := inicioy
+antiguox := 0
+antiguoy := 0
+contador_pasos := 0
+pasos := []
+return
+
+mover:
+if (finx = actualx and finy = actualy)
+	{
+	;msgbox,listo, viejo, ya llegaste
+	llego := 1
+	}
+else if espacios_totales < 1
+	{
+	;choque contra pared, bloquear ultimo cruce :ok_hand:
+	laberinto["y_"ultimocrucey]["x_"ultimocrucex] := "p"
+	gosub, reiniciar_posicion
+	;te vamos a extranar grid, eras tan linda
+	;gosub, repintar_tabla
+	}
+else if espacios_totales = 1
+	{
+	antiguox := actualx
+	antiguoy := actualy
+	if arr_libre = 1
+		{
+		gosub mover_arriba
+		}
+	else if der_libre = 1
+		{
+		gosub mover_derecha
+		}
+	else if abj_libre = 1
+		{
+		gosub mover_abajo
+		}
+	else if izq_libre = 1
+		{
+		gosub mover_izquierda
+		}
+	;muevo cursor, ya no lo muevo porque no lo dibujo :C
+	;GuiControl, +cYellow, x_%actualx%y_%actualy%
+	}
+else if espacios_totales > 1
+	{
+	antiguox := actualx
+	antiguoy := actualy
+	if arr_libre = 1
+		{
+		ultimocrucex := actualx
+		ultimocrucey := actualy - 1
+		gosub mover_arriba
+		}
+	else if der_libre = 1
+		{
+		ultimocrucex := actualx + 1
+		ultimocrucey := actualy
+		gosub mover_derecha
+		}
+	else if abj_libre = 1
+		{
+		ultimocrucex := actualx
+		ultimocrucey := actualy + 1
+		gosub mover_abajo
+		}
+	else if izq_libre = 1
+		{
+		ultimocrucex := actualx - 1
+		ultimocrucey := actualy
+		gosub mover_izquierda
+		}
+	;muevo cursor, ya no lo muevo porque no lo dibujo :C
+	;GuiControl, +cYellow, x_%actualx%y_%actualy%
+	}
+return
+
+mover_arriba:
+contador_pasos += 1
+actualx := actualx
+actualy := actualy - 1
+pasos[contador_pasos] := "up"
+return
+
+mover_derecha:
+contador_pasos += 1
+actualx := actualx + 1
+actualy := actualy
+pasos[contador_pasos] := "right"
+return
+
+mover_abajo:
+contador_pasos += 1
+actualx := actualx
+actualy := actualy + 1
+pasos[contador_pasos] := "down"
+return
+
+mover_izquierda:
+contador_pasos += 1
+actualx := actualx - 1
+actualy := actualy
+pasos[contador_pasos] := "left"
+return
+
+contar_libres:
+espacioslibres = 
+
+
+arrx := actualx
+arry := actualy - 1
+
+izqx := actualx - 1
+izqy := actualy
+
+derx := actualx + 1
+dery := actualy
+
+abjx := actualx
+abjy := actualy + 1
+
+arr_libre := 0
+izq_libre := 0
+der_libre := 0
+abj_libre := 0
+
+arriba := laberinto["y_"arry]["x_"arrx]
+izquierda := laberinto["y_"izqy]["x_"izqx]
+derecha := laberinto["y_"dery]["x_"derx]
+abajo := laberinto["y_"abjy]["x_"abjx]
+
+
+
+if (antiguox = arrx and antiguoy = arry)
+	{
+	;es de donde vengo
+	}
+else
+	{
+	if (arriba = "o")
+		{
+		espacioslibres := espacioslibres "arriba - "
+		arr_libre := 1
+		}
+	}
+
+if (antiguox = izqx and antiguoy = izqy)
+	{
+	;es de donde vengo
+	}
+else
+	{
+	if (izquierda = "o")
+		{
+		espacioslibres := espacioslibres "izquierda - "
+		izq_libre := 1
+		}
+	}
+
+if (antiguox = derx and antiguoy = dery)
+	{
+	;es de donde vengo
+	}
+else
+	{
+	if (derecha = "o")
+		{
+		espacioslibres := espacioslibres "derecha - "
+		der_libre := 1
+		}
+	}
+
+if (antiguox = abjx and antiguoy = abjy)
+	{
+	;es de donde vengo
+	}
+else
+	{
+	if (abajo = "o")
+		{
+		espacioslibres := espacioslibres "abajo - "
+		abj_libre := 1
+		}
+	}
+
+espacios_totales := arr_libre + izq_libre + der_libre + abj_libre
+;linda, hermosa linea debuggeadora
+;msgbox, actual: x:%actualx% - y:%actualy%`rarriba: %arriba% - x:%arrx% y%arry%`rizquierda: %izquierda% - x:%izqx% y:%izqy%`rderecha: %derecha% - x:%derx% y:%dery%`rabajo: %abajo% - x:%abjx% y:%abjy%`respacios libres: %espacioslibres%`respacios totales: %espacios_totales%
+
+return
+
+procesar_pasos:
+;pasos_completa := ""
+;contador_salteado := 1
+;pasos_cont_totales := 1
+;for i, k in pasos
+;	{
+;	pasos_completa := pasos_completa pasos[contador_salteado] " - "
+;	contador_salteado += 2
+;	pasos_cont_totales += 1
+;	}
+;msgbox, %pasos_completa%
+saltear := 0
+pasos_cont_totales := 1
+pasos_limpio_final := []
+pasos_completa := ""
+
+for i, k in pasos
+{
+	if (saltear = 0)
+	{
+		saltear := 1
+		;pasos_completa := pasos_completa pasos[i] " - "
+		pasos_limpio_final[pasos_cont_totales] := k
+		pasos_cont_totales += 1
+	}
+	else
+	{
+		saltear := 0
+	}
+}
+
+;aca devuelvo el resultado, cuidadito
+gosub, decir_laberinto_final
+
+return
+
+decir_laberinto_final:
+;d.SpeakWait("begin")
+
+acumulador_laberinto := 0
+pasos_completa := ""
+
+for i, k in pasos_limpio_final
+	if (acumulador_laberinto > 1)
+		{
+		SB_SetText(pasos_completa, 2)
+		d.SpeakWait(pasos_completa)
+		pasos_completa := ""
+		pasos_completa := pasos_completa k " - "
+		acumulador_laberinto := 1
+		}
+		else
+		{
+		pasos_completa := pasos_completa k " - "
+		acumulador_laberinto += 1
+		}
+
+SB_SetText(pasos_completa, 2)
+d.SpeakWait(pasos_completa)
+
+
+return
+
+
+/*
+;mi hermosa grid
+repintar_tabla:
+alto := 6
+ancho := 6
+posx := 10
+posy := 10
+punteroy := 1
+punterox := 1
+
+
+loop, 13
+{
+	
+	Loop, 13
+	{
+		if (laberinto["y_"punteroy]["x_"punterox] = "p")
+		{
+			GuiControl, +cBlack, x_%punterox%y_%punteroy%
+		}
+		else
+		{
+			GuiControl, +cLime, x_%punterox%y_%punteroy%
+		}
+		posx += 5
+		punterox += 1
+	}
+	posx := 10
+	punterox := 1
+	punteroy += 1
+	posy += 5
+}
+
+
+GuiControl, +cYellow, x_%iniciox%y_%inicioy%
+GuiControl, +cRed, x_%finx%y_%finy%
+
+return
+*/
+
+;----------------------------------------------------
+;---------------------defino laberintos--------------
+;----------------------------------------------------
+;mucho muy importante
+laberinto_1-2:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+laberinto_5-2:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"p",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+laberinto_4-4:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"p",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+laberinto_1-1:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+laberinto_5-3:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+laberinto_5-1:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"p",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+laberinto_2-1:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+laberinto_4-1:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+laberinto_3-2:
+laberinto.Insert("y_1", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_2", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"o",x_6:"o",x_7:"o",x_8:"o",x_9:"o",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_3", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_4", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_5", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_6", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"o",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_7", {x_1:"p",x_2:"o",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"o",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_8", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_9", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_10", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"o",x_10:"o",x_11:"p",x_12:"o",x_13:"p"})
+laberinto.Insert("y_11", {x_1:"p",x_2:"o",x_3:"p",x_4:"o",x_5:"p",x_6:"o",x_7:"p",x_8:"o",x_9:"p",x_10:"o",x_11:"p",x_12:"p",x_13:"p"})
+laberinto.Insert("y_12", {x_1:"p",x_2:"o",x_3:"o",x_4:"o",x_5:"p",x_6:"o",x_7:"o",x_8:"o",x_9:"p",x_10:"o",x_11:"o",x_12:"o",x_13:"p"})
+laberinto.Insert("y_13", {x_1:"p",x_2:"p",x_3:"p",x_4:"p",x_5:"p",x_6:"p",x_7:"p",x_8:"p",x_9:"p",x_10:"p",x_11:"p",x_12:"p",x_13:"p"})
+return
+
+
+
+
+/*
+handling FUCKING OBJECTSSSSSSSSSSS
+eterna lucha de manejo de variables
+c::
+;ultimocrucey := "y_1"
+;ultimocrucex := "x_1"
+;laberinto.Insert("y_"[ultimocrucey], {x_[ultimocrucex]:"o"})
+;laberinto.y_1.x_1 := "o"
+;laberinto.ultimocrucey ultimocrucexr := "o"
+;.RemoveAt(Pos , Length)
+;laberinto[ultimocrucey][ultimocrucex] := "o"
+;laberinto.y_1.Delete(x_1)
+;laberinto.Insert("y_1", {x_14:"o"})
+;laberinto[ultimocrucey][ultimocrucex] := "o"
+
+ultimocrucey := 1
+ultimocrucex := 1
+laberinto["y_"ultimocrucey]["x_"ultimocrucex] := "p"
+return
+
+testin array asociativas te odio autohokey
+v::
+ultimocrucey := 1
+ultimocrucex := 1
+foo := laberinto["y_"ultimocrucey]["x_"ultimocrucex]
+msgbox, %foo%
+return
+
+
+
+*/
+
+
+
 
 
 
@@ -3331,6 +4011,72 @@ return
 bip:
 SoundBeep, 2000, 50
 return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
